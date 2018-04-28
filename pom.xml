@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.github.phillip-kruger</groupId>
+        <artifactId>javaee-servers-parent</artifactId>
+        <version>javaee-7-v5-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>microprofile-demo</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <name>Microprofile Demo</name>
+    <url>https://github.com/phillip-kruger/microprofile-demo</url>
+    <description>Example application to demonstrate MicroProfile</description>
+    
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:git:https://github.com/phillip-kruger/microprofile-demo.git</connection>
+        <url>https://github.com/phillip-kruger/microprofile-demo</url>
+    </scm>
+
+    <distributionManagement>
+        <site>
+            <id>wiki</id>
+            <url>https://github.com/phillip-kruger/microprofile-demo/wiki</url>
+        </site>
+        
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>Phillip Kruger</name>
+            <email>phillip.kruger@phillip-kruger.com</email>
+            <organizationUrl>http://www.phillip-kruger.com</organizationUrl>
+        </developer>
+    </developers>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Java version -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <!-- JEE Platform -->        
+        <javaee.version>8.0</javaee.version>
+        <microProfile.version>1.3</microProfile.version>
+        <lombok.version>1.16.20</lombok.version>
+        <microProfile.ext.version>1.0.4-SNAPSHOT</microProfile.ext.version>
+        <apiee.version>1.0.8</apiee.version>
+        <h2.version>1.4.197</h2.version>
+        
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+       
+        <!-- Logging settings -->
+        <log.level>FINEST</log.level> 
+        <log.name>com.github.phillipkruger</log.name>
+    </properties>
+    
+    
+    <dependencyManagement>
+        <dependencies>
+            <!-- Jave ee -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${javaee.version}</version>
+            </dependency>
+            <!-- MicroProfile -->
+            <dependency>
+                <groupId>org.eclipse.microprofile</groupId>
+                <artifactId>microprofile</artifactId>
+                <version>${microProfile.version}</version>
+                <type>pom</type>
+            </dependency>
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            
+            <!-- MicroProfile ext -->
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>health-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
+            <!-- Apiee (Swagger) -->
+            <dependency>
+                <groupId>com.github.phillip-kruger</groupId>
+                <artifactId>apiee-core</artifactId>
+                <version>${apiee.version}</version>
+            </dependency>
+            <!-- Database -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
+            
+        </dependencies>
+    </dependencyManagement>
+    
+    <dependencies>
+        <!-- Jave ee -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- MicroProfile -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <finalName>${project.artifactId}</finalName>
+    </build>
+    
+    <modules>
+        <module>membership</module>
+    </modules>
+    
+</project>
