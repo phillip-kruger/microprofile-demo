@@ -65,7 +65,6 @@
         <microProfile.version>1.3</microProfile.version>
         <lombok.version>1.16.20</lombok.version>
         <microProfile.ext.version>1.0.4-SNAPSHOT</microProfile.ext.version>
-        <apiee.version>1.0.8</apiee.version>
         <h2.version>1.4.197</h2.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -97,18 +96,11 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
-            
             <!-- MicroProfile ext -->
             <dependency>
                 <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
                 <artifactId>health-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
-            </dependency>
-            <!-- Apiee (Swagger) -->
-            <dependency>
-                <groupId>com.github.phillip-kruger</groupId>
-                <artifactId>apiee-core</artifactId>
-                <version>${apiee.version}</version>
             </dependency>
             <!-- Database -->
             <dependency>

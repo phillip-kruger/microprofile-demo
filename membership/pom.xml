@@ -15,11 +15,6 @@
     <name>Microprofile Demo :: Membership</name>
     
     <dependencies>
-        <!-- Swagger and Swagger UI -->
-<!--        <dependency>
-            <groupId>com.github.phillip-kruger</groupId>
-            <artifactId>apiee-core</artifactId>
-        </dependency>-->
         <!-- Some default health checks -->
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
