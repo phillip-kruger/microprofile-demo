@@ -1,9 +1,7 @@
 package com.github.phillipkruger.membership;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.java.Log;
+import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
@@ -61,7 +60,7 @@ public class MembershipService {
     
     @GET @Path("{id}")
     @Counted(name = "Membership requests",absolute = true,monotonic = true)
-    @Timed(name = "Membership requests time",unit = "seconds",absolute = false)
+    @Timed(name = "Membership requests time",unit = MetricUnits.NANOSECONDS, absolute = false)
     public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
         
 //        try {
