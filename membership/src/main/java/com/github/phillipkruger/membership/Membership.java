@@ -48,4 +48,13 @@ public class Membership implements Serializable {
     @NotNull(message = "Type can not be empty")
     private Type type;
     
+    public Membership(Person owner){
+        this.owner = owner;
+        this.type = Type.FREE;
+    }
+    
+    public Membership(Person owner, Type type){
+        this.owner = owner;
+        this.type = type;
+    }
 }

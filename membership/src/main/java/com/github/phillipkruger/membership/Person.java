@@ -20,7 +20,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Member POJO
+ * Person POJO
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
 @Data @AllArgsConstructor @NoArgsConstructor

@@ -9,7 +9,7 @@ import javax.ws.rs.core.Application;
  * 
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
-@ApplicationPath("/rest")
+@ApplicationPath("/api")
 public class ApplicationConfig extends Application {
 
 }

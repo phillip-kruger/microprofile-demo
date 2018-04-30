@@ -14,6 +14,10 @@
     
     <name>Microprofile Demo :: Membership</name>
     
+    <properties>
+        <yellow.password>Q!w2e3r4</yellow.password>
+    </properties>
+    
     <dependencies>
         <!-- Some default health checks -->
         <dependency>
@@ -25,6 +29,95 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <type>pom</type>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
     
+    
+    <profiles>
+        <!-- Deploy to Yellow Raspberry Pi -->
+        <profile>
+            <id>yellow-pi</id>
+            <activation>
+                <property>
+                    <name>yellow-pi</name>
+                </property>
+            </activation>
+            
+            <build>
+            
+                <plugins>
+                   
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-jsch</artifactId>
+                                <version>1.10.3</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-jsch</artifactId>
+                                <version>1.10.3</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.jcraft</groupId>
+                                <artifactId>jsch</artifactId>
+                                <version>0.1.54</version>
+                            </dependency>
+                            
+                          </dependencies>
+                        <executions>
+                            <execution>
+                                <id>redeploy</id>
+                                <phase>install</phase>
+                                <configuration>
+                                    <target>
+                                        
+                                        <!-- Kill the prev running server -->
+                                        <sshexec 
+                                            trust="true"
+                                            verbose="false"
+                                            host="yellow"
+                                            username="pi"
+                                            password="${yellow.password}"
+                                            command="kill `jps | grep payara-micro-${payara-micro.version}.jar | cut -d ' ' -f 1`"
+                                            failonerror="false"/>
+                                        
+                                        <!-- Copy the new version -->
+                                        <scp file="${project.build.directory}/${project.build.finalName}.war" 
+                                             todir="pi:${yellow.password}@yellow:/home/pi/microprofile-demo/"
+                                             trust="true"
+                                        />
+                                        
+                                        <!-- Start the server -->
+                                        <sshexec 
+                                            trust="true"
+                                            verbose="false"
+                                            host="yellow"
+                                            username="pi"
+                                            password="${yellow.password}"
+                                            command="nohup java -jar microprofile-demo/payara-micro-${payara-micro.version}.jar --logToFile microprofile-demo/${project.build.finalName}.log microprofile-demo/${project.build.finalName}.war > /dev/null &amp;"/>
+                                        
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
