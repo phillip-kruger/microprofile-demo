@@ -1,7 +1,6 @@
 package com.github.phillipkruger.profiling.health;
 
 import com.github.phillipkruger.profiling.repository.ElasticsearchClient;
-import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import lombok.extern.java.Log;
@@ -28,7 +27,6 @@ public class ProfilingHealthCheck implements HealthCheck {
     
     @Override
     public HealthCheckResponse call() {
-        log.severe(">>>>>>>>>>>>> Profile health check <<<<<<<<<<<<<<<<");
         
         HealthCheckResponseBuilder responseBuilder = HealthCheckResponse.named("profiling");
         
@@ -37,30 +35,21 @@ public class ProfilingHealthCheck implements HealthCheck {
         try{
             ClusterHealthResponse healths = clusterAdminClient.prepareHealth().get();
         
-            String clusterName = healths.getClusterName();
             ClusterHealthStatus status = healths.getStatus();
-            double activeShardsPercent = healths.getActiveShardsPercent();
-            int numberOfDataNodes = healths.getNumberOfDataNodes();     
-            int numberOfNodes = healths.getNumberOfNodes(); 
+            if(status.equals(ClusterHealthStatus.GREEN))up = true;
             
-            if(status.equals(ClusterHealthStatus.GREEN)){
-                up = true;
-            }
-        
             responseBuilder = responseBuilder
-                .withData("clusterName", clusterName)
-                .withData("numberOfDataNodes", numberOfDataNodes)
-                .withData("numberOfNodes", numberOfNodes)
+                .withData("clusterName", healths.getClusterName())
+                .withData("numberOfDataNodes", healths.getNumberOfDataNodes())
+                .withData("numberOfNodes", healths.getNumberOfNodes())
                 .withData("status", status.name())
-                .withData("activeShardsPercent", String.valueOf(activeShardsPercent) + "%");
+                .withData("activeShardsPercent", String.valueOf(healths.getActiveShardsPercent()) + "%");
         }catch(NoNodeAvailableException nnae){
             responseBuilder = responseBuilder
                 .withData("exception", nnae.getMessage());
         }
         
-        
         return responseBuilder.state(up).build();
-            
         
     }
     
