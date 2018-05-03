@@ -9,10 +9,10 @@
     </parent>
     
     <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
-    <artifactId>membership</artifactId>
+    <artifactId>profiling</artifactId>
     <packaging>war</packaging>
     
-    <name>Microprofile Demo :: Membership</name>
+    <name>Microprofile Demo :: Profiling</name>
     
     <dependencies>
         <!-- Some default health checks -->
@@ -20,22 +20,34 @@
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>health-ext</artifactId>
         </dependency>
-        <!-- Database -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
         
+        <!-- Search index -->
+<!--        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>6.2.4</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>6.2.4</version>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>6.2.4</version>
+        </dependency>-->
+
     </dependencies>
     
     
     <profiles>
-        <!-- Deploy to Yellow Raspberry Pi -->
+        <!-- Deploy to Red Raspberry Pi -->
         <profile>
-            <id>yellow-pi</id>
+            <id>red-pi</id>
             <activation>
                 <property>
-                    <name>yellow-pi</name>
+                    <name>red-pi</name>
                 </property>
             </activation>
             
@@ -55,30 +67,30 @@
                                     <target>
                                         
                                         <!-- Kill the prev running server -->
-                                        <sshexec 
+<!--                                        <sshexec 
                                             trust="true"
                                             verbose="false"
                                             host="yellow"
                                             username="pi"
                                             password="${pi.password}"
                                             command="kill `jps | grep payara-micro-${payara-micro.version}.jar | cut -d ' ' -f 1`"
-                                            failonerror="false"/>
+                                            failonerror="false"/>-->
                                         
                                         <!-- Copy the new version -->
-                                        <scp file="${project.build.directory}/${project.build.finalName}.war" 
+<!--                                        <scp file="${project.build.directory}/${project.build.finalName}.war" 
                                              todir="pi:${pi.password}@yellow:/home/pi/microprofile-demo/"
                                              trust="true"
-                                        />
+                                        />-->
                                         
                                         <!-- Start the server -->
-                                        <sshexec 
+<!--                                        <sshexec 
                                             trust="true"
                                             verbose="false"
                                             host="yellow"
                                             username="pi"
                                             password="${pi.password}"
-                                            command="nohup java -jar microprofile-demo/payara-micro-${payara-micro.version}.jar --disablephonehome --nocluster --nohostaware --logToFile microprofile-demo/${project.build.finalName}.log microprofile-demo/${project.build.finalName}.war > /dev/null &amp;"/>
-                                        
+                                            command="nohup java -jar microprofile-demo/payara-micro-${payara-micro.version}.jar -logToFile microprofile-demo/${project.build.finalName}.log microprofile-demo/${project.build.finalName}.war > /dev/null &amp;"/>
+                                        -->
                                     </target>
                                 </configuration>
                                 <goals>

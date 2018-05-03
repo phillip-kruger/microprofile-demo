@@ -1,6 +1,7 @@
 package com.github.phillipkruger.membership;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
@@ -52,22 +53,23 @@ public class MembershipService {
     }
     
     @GET
-    @Timed(name = "Memberships requests time")
+    @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
     public List<Membership> getAllMemberships() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ex) {
+            log.log(Level.SEVERE, null, ex);
+        }
+        
         TypedQuery<Membership> query = em.createNamedQuery(Membership.QUERY_FIND_ALL, Membership.class);
         return query.getResultList();
     }
     
     @GET @Path("{id}")
     @Counted(name = "Membership requests",absolute = true,monotonic = true)
-    @Timed(name = "Membership requests time",unit = MetricUnits.NANOSECONDS, absolute = false)
     public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
         
-//        try {
-//            TimeUnit.SECONDS.sleep(1);
-//        } catch (InterruptedException ex) {
-//            log.log(Level.SEVERE, null, ex);
-//        }
+
         
         return em.find(Membership.class,id);
     }

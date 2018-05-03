@@ -72,6 +72,9 @@
         <!-- Logging settings -->
         <log.level>FINEST</log.level> 
         <log.name>com.github.phillipkruger</log.name>
+        
+        <!-- Password to scp to Raspberry Pi -->
+        <pi.password>Q!w2e3r4</pi.password>
     </properties>
     
     
@@ -136,10 +139,41 @@
     
     <build>
         <finalName>${project.artifactId}</finalName>
+        
+        <pluginManagement>
+            
+            <plugins>
+                   
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant-jsch</artifactId>
+                            <version>1.10.3</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant-jsch</artifactId>
+                            <version>1.10.3</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.jcraft</groupId>
+                            <artifactId>jsch</artifactId>
+                            <version>0.1.54</version>
+                        </dependency>
+
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     
     <modules>
         <module>membership</module>
+        <module>profiling</module>
     </modules>
     
 </project>
