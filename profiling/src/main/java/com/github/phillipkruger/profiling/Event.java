@@ -27,6 +27,7 @@ public class Event  {
     private String eventName; // what happened ?
     private Duration duration; // for how long (optional)?
     private String location; // where did this happen (optional)?
+    private String partnerName; // at what partner did this happen (optional)?
     
     private Map<String,String> metadata = new HashMap<>(); // anyting else we need to know (optional) ?
     

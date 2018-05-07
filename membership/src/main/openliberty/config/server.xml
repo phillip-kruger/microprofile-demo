@@ -8,7 +8,6 @@
     </featureManager>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
-    
     <httpEndpoint id="defaultHttpEndpoint"
         httpPort="${httpPort}"
         httpsPort="${httpsPort}"/>
@@ -21,11 +20,6 @@
     <basicRegistry id="basic" realm="ibm/api">
         <user name="guest" password="0p3nL1b3ry" />
     </basicRegistry>                                                                                                                                                                                                                         
-
-<!--    <library id="global">
-        <file name="${server.config.dir}/apps/expanded/${artifactId}.war/WEB-INF/lib/h2-${h2.version}.jar"/>
-        <file name="/tmp/membership/openliberty/wlp/usr/servers/defaultServer/apps/expanded/membership.war/WEB-INF/lib/h2-1.4.197.jar"/>
-    </library>-->
         
     <application location="${project.build.directory}/${project.build.finalName}.war"/>
     

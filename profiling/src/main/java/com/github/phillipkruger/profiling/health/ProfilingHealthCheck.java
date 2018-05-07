@@ -36,7 +36,7 @@ public class ProfilingHealthCheck implements HealthCheck {
             ClusterHealthResponse healths = clusterAdminClient.prepareHealth().get();
         
             ClusterHealthStatus status = healths.getStatus();
-            if(status.equals(ClusterHealthStatus.GREEN))up = true;
+            if(status.equals(ClusterHealthStatus.GREEN) || status.equals(ClusterHealthStatus.YELLOW))up = true;
             
             responseBuilder = responseBuilder
                 .withData("clusterName", healths.getClusterName())
