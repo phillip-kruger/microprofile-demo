@@ -13,35 +13,525 @@
     <packaging>war</packaging>
     
     <name>Microprofile Demo :: Profiling</name>
+
+    <properties>
+        <!-- wildfly-swarm properties -->
+        <wildfly-swarm.version>2018.5.0</wildfly-swarm.version>
+        <wildfly-swarm.http.port>8080</wildfly-swarm.http.port>
+        <wildfly-swarm.https.port>8443</wildfly-swarm.https.port>
+        <wildfly-swarm.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}wildfly-swarm</wildfly-swarm.installDir>
+        <wildfly-swarm.deployDir>${wildfly-swarm.installDir}${file.separator}deployments</wildfly-swarm.deployDir>
+        <wildfly-swarm.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}wildfly-swarm${file.separator}config</wildfly-swarm.configDir>
+        <wildfly-swarm.logsDir>${wildfly-swarm.installDir}${file.separator}logs</wildfly-swarm.logsDir>
+        <wildfly-swarm.logfile>${wildfly-swarm.logsDir}${file.separator}server.log</wildfly-swarm.logfile>
+        
+        <es.version>6.2.4</es.version>
+    </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>bom-all</artifactId>
+                <version>${wildfly-swarm.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>    
+        </dependencies>
+    </dependencyManagement>
     
     <dependencies>
-        <!-- Some default health checks -->
-        <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
-            <artifactId>health-ext</artifactId>
-        </dependency>
         
         <!-- Search index -->
-<!--        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-            <version>6.2.4</version>
-        </dependency>-->
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>transport</artifactId>
-            <version>6.2.4</version>
+            <version>${es.version}</version>
         </dependency>
-<!--        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>6.2.4</version>
-        </dependency>-->
 
+        <!-- Swagger UI -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>openapi-ext</artifactId>
+        </dependency>
+        
     </dependencies>
     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+
+                            <resources>
+                                
+                                <!-- Wildfly-swarm config (TODO: Use yml ?)-->
+                                <resource>
+                                    <directory>${wildfly-swarm.configDir}</directory>
+                                    <targetPath>${project.build.directory}</targetPath>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>standalone.xml</include>
+                                    </includes>
+                                </resource>
+                                
+                            </resources>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Wildfly swarm plugin -->
+            <plugin>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>wildfly-swarm-plugin</artifactId>
+                <version>${wildfly-swarm.version}</version>
+                
+                <configuration>
+                    <properties>
+                        <swarm.context.path>/${project.artifactId}</swarm.context.path>
+                        <swarm.http.port>${wildfly-swarm.http.port}</swarm.http.port>
+                        <swarm.https.port>${wildfly-swarm.https.port}</swarm.https.port>
+                        <swarm.management.http.port>2${wildfly-swarm.http.port}</swarm.management.http.port> 
+                        <swarm.management.https.port>2${wildfly-swarm.https.port}</swarm.management.https.port>
+                    </properties>
+                    
+                    <!-- Metrics does not do auto detection -->
+                    <fractions>microprofile-metrics,microprofile-openapi</fractions>
+                </configuration>
+                
+            </plugin>
+        </plugins>
+    </build>
     
     <profiles>
+        
+        <profile>
+            <id>wildfly-swarm-run</id>
+            <activation>
+                <property>
+                    <name>wildfly-swarm-run</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    
+                    <plugin>
+                        <groupId>org.wildfly.swarm</groupId>
+                        <artifactId>wildfly-swarm-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-jar</argument>
+                                <argument>-Xdebug</argument>
+                                <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</argument>
+                                <argument>${project.build.directory}${file.separator}${project.artifactId}-swarm.jar</argument>
+                                <argument>-c</argument>
+                                <argument>${project.build.directory}${file.separator}standalone.xml</argument>
+                            </arguments>
+                            <configuration>
+                            <hollow>true</hollow>
+                            <additionalFractions>scanner</additionalFractions>
+                        </configuration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>wildfly-swarm-start</id>
+            <activation>
+                <property>
+                    <name>wildfly-swarm-start</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <!-- Create or merge standalone.xml to add deployment scanner -->
+                    <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>groovy-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <source>
+                                        <![CDATA[
+                                        String scannerSubsystem = "\t<subsystem xmlns=\"urn:jboss:domain:deployment-scanner:2.0\">\n\t<deployment-scanner \n\t\tscan-enabled=\"true\"\n\t\tscan-interval=\"5000\" \n\t\tpath=\"${wildfly-swarm.deployDir}\" \n\t\tname=\"${project.artifactId}\" \n\t\tauto-deploy-xml=\"false\"/> \n\t</subsystem>";
+                                        println("==== Java EE servers parent maven (Wildfly Swarm) ====");
+                                        File deployDir = new File("${wildfly-swarm.deployDir}");
+                                        deployDir.mkdirs();
+
+                                        println("Scanner looking for deployments in ${wildfly-swarm.deployDir}");
+                                        File targetDir = new File("${project.build.directory}");
+                                        if(targetDir.exists() && !targetDir.isDirectory()) {
+                                            println("Target dir does not exist, wont create standalone.xml !");
+                                            return;
+                                        }
+                                        File standaloneXmlFile = new File(targetDir,"standalone.xml");
+
+                                        String content = null;
+                                        if(standaloneXmlFile.exists() && !standaloneXmlFile.isDirectory()) {
+                                            println("Enhancing existing standalone.xml");
+                                            BufferedReader reader = new BufferedReader(new FileReader (standaloneXmlFile));
+                                            String line = null;
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            String ls = System.getProperty("line.separator");
+
+                                            try {
+                                                while((line = reader.readLine()) != null) {
+                                                    stringBuilder.append(line);
+                                                    stringBuilder.append(ls);
+                                                }
+                                                content = stringBuilder.toString();
+                                            } finally {
+                                                reader.close();
+                                            }
+                                        }else{
+                                            println("Creating standalone.xml");
+                                            content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                                            content = content + "\n<profile>";
+                                            content = content + "\n</profile>";
+                                        }
+
+                                        content = content.replaceAll("</profile>", scannerSubsystem + "\n\t</profile>");
+
+                                        BufferedWriter writer = new BufferedWriter(new FileWriter(standaloneXmlFile));
+
+                                        writer.write(content);
+                                        writer.close();
+                                        ]]>
+                                    </source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.wildfly.swarm</groupId>
+                        <artifactId>wildfly-swarm-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>2</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <hollow>true</hollow>
+                            <additionalFractions>scanner</additionalFractions>
+                        </configuration>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>3</id>
+                                <phase>integration-test</phase>
+                                <configuration>
+                                    <target name="copy wildfly-swarm distribution">
+                                        <copy file="${project.build.directory}${file.separator}${project.artifactId}-hollow-swarm.jar" 
+                                              tofile="${wildfly-swarm.installDir}${file.separator}${project.artifactId}-hollow-swarm.jar"
+                                              overwrite="true" force="true" verbose="true"/>
+                                        <copy file="${project.build.directory}${file.separator}standalone.xml" 
+                                              tofile="${wildfly-swarm.installDir}${file.separator}standalone.xml" 
+                                              overwrite="true" force="true" verbose="true"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>4</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>java</executable>
+                            <async>true</async>
+                            <asyncDestroyOnShutdown>false</asyncDestroyOnShutdown>
+                            <arguments>
+                                <argument>-jar</argument>
+                                <argument>-Xdebug</argument>
+                                <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</argument>
+                                <argument>${wildfly-swarm.installDir}${file.separator}${project.artifactId}-hollow-swarm.jar</argument>
+                                <argument>-c</argument>
+                                <argument>${wildfly-swarm.installDir}${file.separator}standalone.xml</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>5</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>${project.packaging}</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${wildfly-swarm.deployDir}</outputDirectory>
+                                    <stripVersion>true</stripVersion>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                   
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>wildfly-swarm-stop</id>
+            <activation>
+                <property>
+                    <name>wildfly-swarm-stop</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec executable="${JAVA_HOME}/bin/jps">
+                                            <redirector outputproperty="process.pid">
+                                                <outputfilterchain>
+                                                    <linecontains>
+                                                        <contains value="${project.artifactId}-hollow-swarm.jar" />
+                                                    </linecontains>
+                                                    <replacestring from=" ${project.artifactId}-hollow-swarm.jar" />
+                                                </outputfilterchain>
+                                            </redirector>
+                                        </exec>
+                                        <exec executable="taskkill" osfamily="winnt">
+                                            <arg value="/PID" />
+                                            <arg value="${process.pid}" />
+                                        </exec>
+                                        <exec executable="kill" osfamily="unix">
+                                            <arg value="-9" />
+                                            <arg value="${process.pid}" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            
+                        </executions>
+                    </plugin>
+                    
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>wildfly-swarm-deploy</id>
+            <activation>
+                <property>
+                    <name>wildfly-swarm-deploy</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>2</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>${project.packaging}</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${wildfly-swarm.deployDir}</outputDirectory>
+                                    <stripVersion>true</stripVersion>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>6</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+
+                                <configuration>
+                                    <target>
+                                        <loadfile srcfile="${wildfly-swarm.logfile}" property="serverlog" failonerror="false">
+                                            <filterchain>
+                                                <tailfilter lines="12"/>
+                                            </filterchain>
+                                        </loadfile>
+
+                                        <echo message="${serverlog}"/>
+                                    </target>
+
+                                </configuration>
+
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            
+        </profile>
+        
+        <profile>
+            <id>wildfly-swarm-package</id>
+            <activation>
+                <property>
+                    <name>wildfly-swarm-package</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.swarm</groupId>
+                        <artifactId>wildfly-swarm-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            
+        </profile>
+        
+        <profile>
+            <id>wildfly-swarm-log</id>
+            <activation>
+                <property>
+                    <name>wildfly-swarm-log</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>tail</executable>
+                            <arguments>
+                                <argument>-F</argument>
+                                <argument>${wildfly-swarm.logfile}</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            
+        </profile>
+        
         <!-- Deploy to Red Raspberry Pi -->
         <profile>
             <id>red-pi</id>

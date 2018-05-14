@@ -8,27 +8,31 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  * Event POJO
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
 @Data @AllArgsConstructor @NoArgsConstructor
+@Schema(name="Event", description="POJO that represents an event.")
 public class Event  {
     
-    @NotNull
-    private int userId; // who did it ?
-            
-    @NotNull
-    private LocalDateTime timeOccured; // when did this happen ?
-    private LocalDateTime timeReceived = LocalDateTime.now(); // when did we hear about it ?
-    
-    @NotNull
-    private String eventName; // what happened ?
-    private Duration duration; // for how long (optional)?
-    private String location; // where did this happen (optional)?
-    private String partnerName; // at what partner did this happen (optional)?
-    
-    private Map<String,String> metadata = new HashMap<>(); // anyting else we need to know (optional) ?
+    @NotNull @Schema(required = true, example = "1", description = "Who did it ?")
+    private int userId;
+    @NotNull @Schema(required = true, description = "When did this happen ?")
+    private LocalDateTime timeOccured; 
+    @NotNull @Schema(required = false, description = "When did we hear about it ?")
+    private LocalDateTime timeReceived = LocalDateTime.now();
+    @NotNull @Schema(required = true, example = "Gym", description = "What happened ?")
+    private String eventName;
+    @Schema(required = false, description = "For how long ?")
+    private Duration duration;
+    @Schema(required = false, example = "Johannesburg", description = "Where did this happen ?")
+    private String location;
+    @Schema(required = false, example = "Virgin Active", description = "At what partner did this happen ?")
+    private String partnerName;
+    @Schema(required = false, description = "Anyting else we need to know ?")
+    private Map<String,String> metadata = new HashMap<>();
     
 }

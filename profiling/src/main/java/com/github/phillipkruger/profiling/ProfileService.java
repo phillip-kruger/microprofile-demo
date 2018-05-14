@@ -2,8 +2,6 @@ package com.github.phillipkruger.profiling;
 
 import com.github.phillipkruger.profiling.repository.ElasticsearchClient;
 import java.io.StringReader;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +26,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import lombok.extern.java.Log;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.metrics.Counter;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -47,13 +54,20 @@ import org.elasticsearch.search.SearchHits;
 @RequestScoped
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Profile service",description = "Build up a profile of the user")
 public class ProfileService {
+    
+    @Inject
+    private Counter aCounter;
     
     @Inject
     private ElasticsearchClient client;
     
+    @Counted(name = "Events logged",absolute = true,monotonic = true)
     @POST
-    public void logEvent(@NotNull Event event){
+    public void logEvent(@NotNull @RequestBody(description = "Log a new event.",content = @Content(mediaType = MediaType.APPLICATION_JSON,schema = @Schema(implementation = Event.class))) 
+                        Event event){
+        
         JsonObject jo = toJsonObject(event);
         String json = jo.toString();
         
@@ -77,44 +91,35 @@ public class ProfileService {
         
     }
     
-    @GET @Path("{userId}")
+    @GET @Path("user/{userId}")
+    @Timed(name = "Getting event requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
+    @Operation(description = "Getting all the events for a certain user")
     public Response getUserEvents(@PathParam("userId") int userId, @DefaultValue("-1") @QueryParam("size") int size){
-
+        return search(USER_ID,userId,size);
+    }
+    // TODO: Add user per day
+    
+    @GET @Path("event/{eventName}")
+    public Response searchEvents(@PathParam("eventName") String eventName, @DefaultValue("-1") @QueryParam("size") int size){
+        return search(EVENT_NAME,eventName,size);
+    }
+    
+    @GET @Path("location/{location}")
+    public Response searchLocations(@PathParam("location") String location, @DefaultValue("-1") @QueryParam("size") int size){
+        return search(LOCATION,location,size);
+    }
+    
+    @GET @Path("partner/{partner}")
+    public Response searchPartners(@PathParam("partner") String partner, @DefaultValue("-1") @QueryParam("size") int size){
+        return search(PARTNER_NAME,partner,size);
+    }
+    
+    private Response search(String key,Object value,int size){
         if(size<0)size=defaultResponseSize;
         try{
-            SearchResponse response = getSearchRequestBuilder(userId,size).get();
+            SearchResponse response = getSearchRequestBuilder(key,value,size).get();
         
-            int status = response.status().getStatus();
-            if(status == 200){
-                SearchHits hits = response.getHits();
-                long numberOfHits = hits.totalHits;
-                if(numberOfHits>0){
-                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                    long took = response.getTook().getMillis();
-                
-                    SearchHit[] hitsArray = hits.getHits();
-
-                    for(SearchHit hit:hitsArray){
-                        String json = hit.getSourceAsString();
-                        
-                        JsonReader jsonReader = Json.createReader(new StringReader(json));
-                        JsonObject eventJson = jsonReader.readObject();        
-
-                        arrayBuilder.add(eventJson);
-                        
-                    }
-                    return Response.ok(arrayBuilder.build())
-                                .header("x-number-of-hits", numberOfHits)
-                                .header("x-time-took-ms", took)
-                                .build();    
-                }else{
-                    // TODO:...
-                    return Response.serverError().build();    
-                }
-            }else{
-                // TODO:...
-                return Response.serverError().build();    
-            }
+            return handleSearchResponse(response);
         }catch(NoNodeAvailableException nnae){
             // TODO:...
             nnae.printStackTrace();
@@ -122,13 +127,47 @@ public class ProfileService {
         }
     }
     
-    private SearchRequestBuilder getSearchRequestBuilder(int userId,int size){
+    private Response handleSearchResponse(SearchResponse response){
+        int status = response.status().getStatus();
+        log.severe("status is " + status);
+        if(status == 200){
+            SearchHits hits = response.getHits();
+            long numberOfHits = hits.totalHits;
+            log.severe("numberOfHits is " + numberOfHits);
+            if(numberOfHits>0){
+                JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                long took = response.getTook().getMillis();
+
+                SearchHit[] hitsArray = hits.getHits();
+
+                for(SearchHit hit:hitsArray){
+                    String json = hit.getSourceAsString();
+
+                    JsonReader jsonReader = Json.createReader(new StringReader(json));
+                    JsonObject eventJson = jsonReader.readObject();        
+
+                    arrayBuilder.add(eventJson);
+
+                }
+                return Response.ok(arrayBuilder.build())
+                            .header("x-number-of-hits", numberOfHits)
+                            .header("x-time-took-ms", took)
+                            .build();    
+            }else{
+                // TODO:...
+                return Response.serverError().build();    
+            }
+        }else{
+            // TODO:...
+            return Response.serverError().build();    
+        }
+    }
+    
+    private SearchRequestBuilder getSearchRequestBuilder(String key,Object value,int size){
         SearchRequestBuilder srb = client.getClient().prepareSearch(INDEX).setTypes(TYPE);
         srb = srb.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
-        srb = srb.setQuery(QueryBuilders.termQuery(USER_ID, userId));
-        //srb = srb.setPostFilter(QueryBuilders.rangeQuery("age").from(12).to(18))     // Filter
+        srb = srb.setQuery(QueryBuilders.termQuery(key, value));
         srb = srb.setFrom(0).setSize(size);
-        
         return srb;
     }
     
@@ -154,32 +193,6 @@ public class ProfileService {
         objectBuilder.add(METADATA, metadataBuilder.build());
         
         return objectBuilder.build();
-    }
-    
-    private Event toEvent(String json){
-        JsonReader jsonReader = Json.createReader(new StringReader(json));
-        JsonObject jobj = jsonReader.readObject();  
-
-
-        int userId = jobj.getInt(USER_ID);
-        String eventName = jobj.getString(EVENT_NAME);
-        String location = jobj.getString(LOCATION);
-        String partnerName = jobj.getString(PARTNER_NAME);
-        String timeOccured = jobj.getString(TIME_OCCURED);
-        String timeReceived = jobj.getString(TIME_RECEIVED);
-        int durationInSeconds = jobj.getInt(DURATION_IN_SECONDS);
-        
-        Event e = new Event();
-        e.setUserId(userId);
-        e.setEventName(eventName);
-        e.setLocation(location);
-        e.setPartnerName(partnerName);
-        if(timeOccured!=null && !timeOccured.isEmpty())e.setTimeOccured(LocalDateTime.parse(timeOccured, dtf));
-        if(timeReceived!=null && !timeReceived.isEmpty())e.setTimeReceived(LocalDateTime.parse(timeReceived, dtf));
-        e.setDuration(Duration.ofSeconds(durationInSeconds));
-        
-        // TODO: Metadata
-        return e;
     }
     
     @Inject @ConfigProperty(name = "default.response.size", defaultValue = "100")

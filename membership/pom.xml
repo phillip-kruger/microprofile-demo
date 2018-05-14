@@ -14,22 +14,524 @@
     
     <name>Microprofile Demo :: Membership</name>
     
+    <properties>
+        <!-- payara-micro properties -->
+        <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
+        <payara-micro.version>5.181</payara-micro.version>
+        <payara-micro.http.port>8080</payara-micro.http.port>
+        <payara-micro.https.port>8443</payara-micro.https.port>
+        <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>
+        <payara-micro.deployDir>${payara-micro.installDir}${file.separator}autodeploy</payara-micro.deployDir>
+        <payara-micro.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}payara-micro${file.separator}config</payara-micro.configDir>
+        <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
+        <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
+        
+        <h2.version>1.4.197</h2.version>
+    </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>fish.payara.extras</groupId>
+                <artifactId>payara-micro</artifactId>
+                <version>${payara-micro.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
     <dependencies>
-        <!-- Some default health checks -->
-        <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
-            <artifactId>health-ext</artifactId>
-        </dependency>
+        
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
         
+        <!-- Microprofile Health ext -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>health-ext</artifactId>
+        </dependency>
     </dependencies>
     
     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>fish.payara.maven.plugins</groupId>
+                <artifactId>payara-micro-maven-plugin</artifactId>
+                <version>${payara-micro.maven.version}</version>
+                <configuration>
+                    <artifactItem>
+                        <groupId>fish.payara.extras</groupId>
+                        <artifactId>payara-micro</artifactId>
+                        <version>${payara-micro.version}</version>
+                    </artifactItem>
+                    <payaraVersion>${payara-micro.version}</payaraVersion>
+                    <commandLineOptions>
+                        <option>
+                            <key>--port</key>
+                            <value>${payara-micro.http.port}</value>
+                        </option>
+                        <option>
+                            <key>--sslport</key>
+                            <value>${payara-micro.https.port}</value>
+                        </option>
+                        <option>
+                            <key>--deploymentdir</key>
+                            <value>${payara-micro.deployDir}</value>
+                        </option>
+                        
+                        <option>
+                            <key>--rootdir</key>
+                            <value>${payara-micro.installDir}</value>
+                        </option>
+                        <option>
+                            <key>--domainconfig</key>
+                            <value>${project.build.directory}/domain.xml</value>
+                        </option>
+ 
+                    </commandLineOptions>
+                    
+                    <deployArtifacts>
+                        <artifactItem>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <type>${project.packaging}</type>
+                        </artifactItem>                       
+                    </deployArtifacts>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
     <profiles>
+        
+        <profile>
+            <id>payara-micro-run</id>
+            <activation>
+                <property>
+                    <name>payara-micro-run</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+
+                    <!-- Create or merge domain.xml to add das-config -->
+                    <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>groovy-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <source>
+                                        <![CDATA[
+                                        String dasConfig = "<das-config autodeploy-enabled=\"true\" dynamic-reload-enabled=\"true\" deploy-xml-validation=\"full\" autodeploy-dir=\"${payara-micro.deployDir}\" />"
+                                        
+                                        println("==== Java EE servers parent maven (Payara Micro) ====");
+                                        File deployDir = new File("${payara-micro.deployDir}");
+                                        deployDir.mkdirs();
+
+                                        println("Das config looking for deployments in ${payara-micro.deployDir}");
+                                        File targetDir = new File("${project.build.directory}");
+                                        if(targetDir.exists() && !targetDir.isDirectory()) {
+                                            println("Target dir does not exist, wont create domain.xml !");
+                                            return;
+                                        }
+                                        File domainXmlFile = new File(targetDir,"domain.xml");
+
+                                        String content = null;
+                                        if(domainXmlFile.exists() && !domainXmlFile.isDirectory()) {
+                                            println("Enhancing existing domain.xml");
+                                            BufferedReader reader = new BufferedReader(new FileReader (domainXmlFile));
+                                            String line = null;
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            String ls = System.getProperty("line.separator");
+
+                                            try {
+                                                while((line = reader.readLine()) != null) {
+                                                    stringBuilder.append(line);
+                                                    stringBuilder.append(ls);
+                                                }
+                                                content = stringBuilder.toString();
+                                            } finally {
+                                                reader.close();
+                                            }
+                                        }else{
+                                            String defaultUrl = "https://raw.githubusercontent.com/payara/Payara/master/appserver/extras/payara-micro/payara-micro-boot/src/main/resources/MICRO-INF/domain/domain.xml";
+                                            println("Creating domain.xml from " + defaultUrl);
+                                            content = new URL(defaultUrl).getText()
+                                        }
+                                        
+                                        content = content.replaceAll("<das-config></das-config>", dasConfig);
+                                        BufferedWriter writer = new BufferedWriter(new FileWriter(domainXmlFile));
+
+                                        writer.write(content);
+                                        writer.close();
+                                        ]]>
+                                    </source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                
+                    <plugin>
+                        <groupId>fish.payara.maven.plugins</groupId>
+                        <artifactId>payara-micro-maven-plugin</artifactId>
+                        <configuration>
+                            <useUberJar>false</useUberJar>
+                            <daemon>false</daemon>
+                            <deployWar>true</deployWar>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>payara-micro-start</id>
+            <activation>
+                <property>
+                    <name>payara-micro-start</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    
+                    <!-- Create or merge domain.xml to add das-config -->
+                    <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>groovy-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <source>
+                                        <![CDATA[
+                                        String dasConfig = "<das-config autodeploy-enabled=\"true\" dynamic-reload-enabled=\"true\" deploy-xml-validation=\"full\" autodeploy-dir=\"${payara-micro.deployDir}\" />"
+                                        
+                                        println("==== Java EE servers parent maven (Payara Micro) ====");
+                                        File deployDir = new File("${payara-micro.deployDir}");
+                                        deployDir.mkdirs();
+
+                                        println("Das config looking for deployments in ${payara-micro.deployDir}");
+                                        File targetDir = new File("${project.build.directory}");
+                                        if(targetDir.exists() && !targetDir.isDirectory()) {
+                                            println("Target dir does not exist, wont create domain.xml !");
+                                            return;
+                                        }
+                                        File domainXmlFile = new File(targetDir,"domain.xml");
+
+                                        String content = null;
+                                        if(domainXmlFile.exists() && !domainXmlFile.isDirectory()) {
+                                            println("Enhancing existing domain.xml");
+                                            BufferedReader reader = new BufferedReader(new FileReader (domainXmlFile));
+                                            String line = null;
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            String ls = System.getProperty("line.separator");
+
+                                            try {
+                                                while((line = reader.readLine()) != null) {
+                                                    stringBuilder.append(line);
+                                                    stringBuilder.append(ls);
+                                                }
+                                                content = stringBuilder.toString();
+                                            } finally {
+                                                reader.close();
+                                            }
+                                        }else{
+                                            String defaultUrl = "https://raw.githubusercontent.com/payara/Payara/master/appserver/extras/payara-micro/payara-micro-boot/src/main/resources/MICRO-INF/domain/domain.xml";
+                                            println("Creating domain.xml from " + defaultUrl);
+                                            content = new URL(defaultUrl).getText()
+                                        }
+                                        
+                                        content = content.replaceAll("<das-config></das-config>", dasConfig);
+                                        BufferedWriter writer = new BufferedWriter(new FileWriter(domainXmlFile));
+
+                                        writer.write(content);
+                                        writer.close();
+                                        ]]>
+                                    </source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>2</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>${project.packaging}</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${payara-micro.deployDir}</outputDirectory>
+                                    <stripVersion>true</stripVersion>
+                                    <commandLineOptions>
+                                        <option>
+                                            <key>--deploymentdir</key>
+                                            <value>${payara-micro.deployDir}</value>
+                                        </option>
+                                        <option>
+                                            <key>--domainconfig</key>
+                                            <value>${project.build.directory}/domain.xml</value>
+                                        </option>
+                                        <option>
+                                            <key>--logtofile</key>
+                                            <value>${payara-micro.logfile}</value>
+                                        </option>
+                                    </commandLineOptions>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>fish.payara.maven.plugins</groupId>
+                        <artifactId>payara-micro-maven-plugin</artifactId>
+                        <configuration>
+                            <useUberJar>false</useUberJar>
+                            <daemon>true</daemon>
+                            <deployWar>false</deployWar>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>bundle</goal>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>payara-micro-stop</id>
+            <activation>
+                <property>
+                    <name>payara-micro-stop</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec executable="${JAVA_HOME}/bin/jps">
+                                            <redirector outputproperty="process.pid">
+                                                <outputfilterchain>
+                                                    <linecontains>
+                                                        <contains value="payara-micro-${payara-micro.version}.jar" />
+                                                    </linecontains>
+                                                    <replacestring from=" payara-micro-${payara-micro.version}.jar" />
+                                                </outputfilterchain>
+                                            </redirector>
+                                        </exec>
+                                        <exec executable="taskkill" osfamily="winnt">
+                                            <arg value="/PID" />
+                                            <arg value="${process.pid}" />
+                                        </exec>
+                                        <exec executable="kill" osfamily="unix">
+                                            <arg value="-15" />
+                                            <arg value="${process.pid}" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            
+                        </executions>
+                    </plugin>
+                    
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>payara-micro-deploy</id>
+            <activation>
+                <property>
+                    <name>payara-micro-deploy</name>
+                </property>
+            </activation>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>2</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>${project.packaging}</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${payara-micro.deployDir}</outputDirectory>
+                                    <stripVersion>true</stripVersion>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>6</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+
+                                <configuration>
+                                    <target>
+                                        <loadfile srcfile="${payara-micro.logfile}.0" property="serverlog" failonerror="false">
+                                            <filterchain>
+                                                <tailfilter lines="12"/>
+                                            </filterchain>
+                                        </loadfile>
+
+                                        <echo message="${serverlog}"/>
+                                    </target>
+
+                                </configuration>
+
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>payara-micro-package</id>
+            <activation>
+                <property>
+                    <name>payara-micro-package</name>
+                </property>
+            </activation>
+            
+            <build>
+            
+                <finalName>${project.artifactId}</finalName>
+    
+                <plugins>
+                    
+                    <plugin>
+                        <groupId>fish.payara.maven.plugins</groupId>
+                        <artifactId>payara-micro-maven-plugin</artifactId>
+                        <configuration>
+                            <autoDeployArtifact>false</autoDeployArtifact>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>bundle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>payara-micro-log</id>
+            <activation>
+                <property>
+                    <name>payara-micro-log</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>tail</executable>
+                            <arguments>
+                                <argument>-F</argument>
+                                <argument>${payara-micro.logfile}.0</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!-- Deploy to Yellow Raspberry Pi -->
         <profile>
             <id>yellow-pi</id>

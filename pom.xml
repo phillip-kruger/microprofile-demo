@@ -2,12 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
-    <parent>
-        <groupId>com.github.phillip-kruger</groupId>
-        <artifactId>javaee-servers-parent</artifactId>
-        <version>javaee-7-v5-SNAPSHOT</version>
-    </parent>
-    
+    <groupId>com.github.phillip-kruger</groupId>
     <artifactId>microprofile-demo</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -65,7 +60,6 @@
         <microProfile.version>1.3</microProfile.version>
         <lombok.version>1.16.20</lombok.version>
         <microProfile.ext.version>1.0.4-SNAPSHOT</microProfile.ext.version>
-        <h2.version>1.4.197</h2.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        
@@ -105,11 +99,10 @@
                 <artifactId>health-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
-            <!-- Database -->
             <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${h2.version}</version>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>openapi-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
             </dependency>
             
         </dependencies>
@@ -135,6 +128,7 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        
     </dependencies>
     
     <build>
