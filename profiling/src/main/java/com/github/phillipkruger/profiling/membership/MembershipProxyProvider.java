@@ -2,24 +2,20 @@ package com.github.phillipkruger.profiling.membership;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import lombok.Getter;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
-@ApplicationScoped
-public class MembershipStub {
+@Dependent
+public class MembershipProxyProvider {
     
-    @Getter
-    private MembershipProxy membershipProxy;
-    
-    @PostConstruct
-    public void init(){
+    @Produces
+    public MembershipProxy getMembershipProxy(){
         try {
             URL apiUrl = new URL(membershipEndpoint);
-                this.membershipProxy = RestClientBuilder.newBuilder()
+                return RestClientBuilder.newBuilder()
                     .baseUrl(apiUrl)
                     .build(MembershipProxy.class);
         } catch (MalformedURLException ex) {

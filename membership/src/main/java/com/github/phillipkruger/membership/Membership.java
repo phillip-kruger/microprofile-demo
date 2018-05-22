@@ -2,6 +2,7 @@ package com.github.phillipkruger.membership;
 
 import java.io.Serializable;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,27 +26,26 @@ import lombok.NoArgsConstructor;
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
 @Data @AllArgsConstructor @NoArgsConstructor
-@Entity
+@Entity(name = Membership.NAME) @Table(name = Membership.NAME)
 @XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
-    @NamedQuery(name = Membership.QUERY_FIND_ALL, query = "SELECT m FROM Membership m"),
-    @NamedQuery(name = Membership.QUERY_FIND_ALL_TYPE, query = "SELECT m FROM Membership m WHERE m.type=:type")
+    @NamedQuery(name = Membership.QUERY_FIND_ALL, query = "SELECT m FROM MEMBERSHIP m")
 })
 public class Membership implements Serializable {
     private static final long serialVersionUID = -8531040143398373846L;
 
     public static final String QUERY_FIND_ALL = "Membership.findAll";
-    public static final String QUERY_FIND_ALL_TYPE = "Membership.findAllType";
     
-    @Id
+    @Id @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int membershipId;
     
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "OWNER_ID")
     @NotNull(message = "Owner can not be empty")
     private Person owner;
     
+    @Column(name = "TYPE")
     @NotNull(message = "Type can not be empty")
     private Type type;
     
@@ -53,8 +54,10 @@ public class Membership implements Serializable {
         this.type = Type.FREE;
     }
     
-    public Membership(Person owner, Type type){
+    public Membership(Person owner, Type membershipType){
         this.owner = owner;
-        this.type = type;
+        this.type = membershipType;
     }
+    
+    public static final String NAME = "MEMBERSHIP";
 }

@@ -1,5 +1,7 @@
 package com.github.phillipkruger.membership;
 
+import java.sql.SQLNonTransientConnectionException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -17,6 +19,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.java.Log;
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
@@ -67,6 +71,8 @@ public class MembershipService {
     
     @GET @Path("{id}")
     @Counted(name = "Membership requests",absolute = true,monotonic = true)
+    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
     public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
         return em.find(Membership.class,id);
     }

@@ -6,7 +6,7 @@ import com.github.phillipkruger.profiling.eventstatus.Successful;
 import com.github.phillipkruger.profiling.eventstatus.Failed;
 import com.github.phillipkruger.profiling.membership.Membership;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
-import com.github.phillipkruger.profiling.membership.MembershipStub;
+import com.github.phillipkruger.profiling.membership.MembershipProxyProvider;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -42,13 +42,7 @@ public class EventLogger {
     private Event<UserEvent> failedBroadcaster;
     
     @Inject
-    private MembershipStub membershipStub;
     private MembershipProxy membershipProxy;
-    
-    
-    public void init(){
-        membershipProxy = membershipStub.getMembershipProxy();
-    }
     
     @Counted(name = "Events logged",absolute = true,monotonic = true)
     @Asynchronous

@@ -28,7 +28,7 @@ public class EventSearcher {
     @Inject
     private TransportClient client;
     
-    @Timeout(value = 10 , unit = ChronoUnit.SECONDS)
+    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
     @CircuitBreaker(failOn = NoNodeAvailableException.class,requestVolumeThreshold = 4, failureRatio=0.75, delay = 5, delayUnit = ChronoUnit.SECONDS )
     public Response search(String key,Object value,int size){
         if(size<0)size=defaultResponseSize;
