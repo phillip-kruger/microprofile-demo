@@ -22,6 +22,7 @@ import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 
@@ -29,7 +30,7 @@ import org.elasticsearch.rest.RestStatus;
 @Log
 public class EventLogger {
     @Inject
-    private ElasticsearchClient client;
+    private TransportClient client;
     
     @Inject
     private UserEventConverter converter;
@@ -55,14 +56,13 @@ public class EventLogger {
     //@Fallback(StringFallbackHandler.class)
     public Future<Void> logEvent(@NotNull UserEvent event){
         
-        if(client.isHealthy()){
             
             String json = converter.toJsonString(event);
             
             // TODO: validateMember(... get the id)
             
             try{
-                IndexResponse response = client.getClient().prepareIndex(ElasticsearchClient.INDEX, ElasticsearchClient.TYPE)
+                IndexResponse response = client.prepareIndex(IndexDetails.INDEX, IndexDetails.TYPE)
                     .setSource(json, XContentType.JSON)
                     .get();
 
@@ -78,10 +78,6 @@ public class EventLogger {
                 log.severe(">>>>>>>>> 2");
                 failedBroadcaster.fire(event);
             }
-        }else{
-            log.severe(">>>>>>>>> 3");
-            failedBroadcaster.fire(event);
-        }
         return CompletableFuture.completedFuture(null);
     }
     

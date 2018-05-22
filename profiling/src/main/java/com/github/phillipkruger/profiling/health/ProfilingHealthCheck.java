@@ -1,7 +1,6 @@
 package com.github.phillipkruger.profiling.health;
 
-import com.github.phillipkruger.profiling.repository.ElasticsearchClient;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import lombok.extern.java.Log;
 import org.eclipse.microprofile.health.Health;
@@ -9,7 +8,10 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.client.ClusterAdminClient;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.cluster.health.ClusterHealthStatus;
 
 /**
  * Simple health check that test that the graphDB is available.
@@ -17,35 +19,48 @@ import org.elasticsearch.client.transport.NoNodeAvailableException;
  */
 @Log
 @Health
-@ApplicationScoped
+@RequestScoped
 public class ProfilingHealthCheck implements HealthCheck {
     
     @Inject
-    private ElasticsearchClient elasticsearchClient;
+    private TransportClient client;
     
     @Override
     public HealthCheckResponse call() {
         
         HealthCheckResponseBuilder responseBuilder = HealthCheckResponse.named("profiling");
         
-        boolean up = elasticsearchClient.isHealthy();
-        
         try{
-            ClusterHealthResponse healthDetails = elasticsearchClient.getHealthDetails();
-        
+            ClusterHealthResponse clusterHealth = getHealthDetails();
+            
+            boolean up = isHealthy(clusterHealth);
             responseBuilder = responseBuilder
-                .withData("clusterName", healthDetails.getClusterName())
-                .withData("numberOfDataNodes", healthDetails.getNumberOfDataNodes())
-                .withData("numberOfNodes", healthDetails.getNumberOfNodes())
-                .withData("status", healthDetails.getStatus().name())
-                .withData("activeShardsPercent", String.valueOf(healthDetails.getActiveShardsPercent()) + "%");
+                .withData("clusterName", clusterHealth.getClusterName())
+                .withData("numberOfDataNodes", clusterHealth.getNumberOfDataNodes())
+                .withData("numberOfNodes", clusterHealth.getNumberOfNodes())
+                .withData("status", clusterHealth.getStatus().name())
+                .withData("activeShardsPercent", String.valueOf(clusterHealth.getActiveShardsPercent()) + "%");
+            
+            return responseBuilder.state(up).build();
+            
         }catch(NoNodeAvailableException nnae){
             responseBuilder = responseBuilder
                 .withData("exception", nnae.getMessage());
+            
+            return responseBuilder.state(false).build();
         }
         
-        return responseBuilder.state(up).build();
-        
+    }
+    
+    
+    private ClusterHealthResponse getHealthDetails(){
+        ClusterAdminClient clusterAdminClient = client.admin().cluster();
+        return clusterAdminClient.prepareHealth().get();
+    }
+    
+    private boolean isHealthy(ClusterHealthResponse clusterHealth){
+        ClusterHealthStatus status = clusterHealth.getStatus();
+        return status.equals(ClusterHealthStatus.GREEN) || status.equals(ClusterHealthStatus.YELLOW);
     }
     
 }

@@ -27,6 +27,7 @@
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
         <h2.version>1.4.197</h2.version>
+        <mysql.version>8.0.11</mysql.version>
     </properties>
     
     <dependencyManagement>
@@ -43,10 +44,15 @@
     <dependencies>
         
         <!-- Database -->
-        <dependency>
+<!--        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
         
         <!-- Microprofile Health ext -->

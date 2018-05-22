@@ -17,6 +17,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -25,7 +26,7 @@ import org.elasticsearch.search.SearchHits;
 @Log
 public class EventSearcher {
     @Inject
-    private ElasticsearchClient client;
+    private TransportClient client;
     
     @Timeout(value = 10 , unit = ChronoUnit.SECONDS)
     @CircuitBreaker(failOn = NoNodeAvailableException.class,requestVolumeThreshold = 4, failureRatio=0.75, delay = 5, delayUnit = ChronoUnit.SECONDS )
@@ -72,7 +73,7 @@ public class EventSearcher {
     }
     
     private SearchRequestBuilder getSearchRequestBuilder(String key,Object value,int size){
-        SearchRequestBuilder srb = client.getClient().prepareSearch(ElasticsearchClient.INDEX).setTypes(ElasticsearchClient.TYPE);
+        SearchRequestBuilder srb = client.prepareSearch(IndexDetails.INDEX).setTypes(IndexDetails.TYPE);
         srb = srb.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
         srb = srb.setQuery(QueryBuilders.termQuery(key, value));
         srb = srb.setFrom(0).setSize(size);

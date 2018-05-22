@@ -2,7 +2,7 @@ package com.github.phillipkruger.profiling.startup;
 
 import com.github.phillipkruger.profiling.UserEvent;
 import com.github.phillipkruger.profiling.UserEventConverter;
-import com.github.phillipkruger.profiling.repository.ElasticsearchClient;
+import com.github.phillipkruger.profiling.repository.IndexDetails;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,12 +12,16 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import lombok.extern.java.Log;
+import org.elasticsearch.client.transport.NoNodeAvailableException;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentType;
 
 /**
  * Just load some test events so that we data to play with
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
+@Log
 @ApplicationScoped
 public class BootstrapData {
     
@@ -25,21 +29,25 @@ public class BootstrapData {
     private UserEventConverter userEventConverter;
     
     @Inject
-    private ElasticsearchClient client;
+    private TransportClient client;
     
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        if(client.isHealthy()){
-            logEvent(createGymEvent(1));
-            logEvent(createDeviceEvent(2));
-            logEvent(createGymEvent(3));
-            logEvent(createDeviceEvent(4));
-        }
+        
+        logEvent(createGymEvent(1));
+        logEvent(createDeviceEvent(2));
+        logEvent(createGymEvent(3));
+        logEvent(createDeviceEvent(4));
+        
     }
     
     private void logEvent(UserEvent event){
-        client.getClient().prepareIndex(ElasticsearchClient.INDEX, ElasticsearchClient.TYPE)
+        try {
+            client.prepareIndex(IndexDetails.INDEX, IndexDetails.TYPE)
                 .setSource(userEventConverter.toJsonString(event), XContentType.JSON)
                 .get();
+        }catch(NoNodeAvailableException nnae){
+            log.warning(nnae.getMessage());
+        }
     }
     
     private UserEvent createGymEvent(int userId){

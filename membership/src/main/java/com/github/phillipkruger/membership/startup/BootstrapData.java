@@ -9,6 +9,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
 
+// TODO: Move to load.sql
 @Startup
 @Singleton
 public class BootstrapData {
