@@ -1,40 +1,54 @@
 package com.github.phillipkruger.profiling.startup;
 
-
-import com.github.phillipkruger.profiling.Event;
-import com.github.phillipkruger.profiling.ProfileService;
+import com.github.phillipkruger.profiling.UserEvent;
+import com.github.phillipkruger.profiling.UserEventConverter;
+import com.github.phillipkruger.profiling.repository.ElasticsearchClient;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import org.elasticsearch.common.xcontent.XContentType;
 
-@Startup
-@Singleton
+/**
+ * Just load some test events so that we data to play with
+ * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
+ */
+@ApplicationScoped
 public class BootstrapData {
     
     @Inject
-    private ProfileService profileService;
+    private UserEventConverter userEventConverter;
     
-    @PostConstruct
-    public void populateDemoData(){
-        profileService.logEvent(createGymEvent(1));
-        profileService.logEvent(createDeviceEvent(2));
-        profileService.logEvent(createGymEvent(3));
-        profileService.logEvent(createDeviceEvent(4));
+    @Inject
+    private ElasticsearchClient client;
+    
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
+        if(client.isHealthy()){
+            logEvent(createGymEvent(1));
+            logEvent(createDeviceEvent(2));
+            logEvent(createGymEvent(3));
+            logEvent(createDeviceEvent(4));
+        }
     }
     
-    private Event createGymEvent(int userId){
+    private void logEvent(UserEvent event){
+        client.getClient().prepareIndex(ElasticsearchClient.INDEX, ElasticsearchClient.TYPE)
+                .setSource(userEventConverter.toJsonString(event), XContentType.JSON)
+                .get();
+    }
+    
+    private UserEvent createGymEvent(int userId){
         
-        Event e = new Event();
+        UserEvent e = new UserEvent();
         e.setUserId(userId); // who did it ?
-        e.setTimeOccured(LocalDateTime.now());
+        e.setTimeOccured(new Date());
         e.setEventName("Gym"); // what happened ?
-        e.setDuration(Duration.ofMinutes(getRandomDuration())); // for how long (optional)?
+        e.setDurationInMinutes((int)Duration.ofMinutes(getRandomDuration()).toMinutes()); // for how long (optional)?
         e.setLocation(getRandomElement(townOptions)); // where did this happen (optional)?
         e.setPartnerName(getRandomElement(gymPartners)); // at what partner did this happen (optional)?
     
@@ -46,13 +60,13 @@ public class BootstrapData {
         return e;
     }
     
-    private Event createDeviceEvent(int userId){
+    private UserEvent createDeviceEvent(int userId){
         
-        Event e = new Event();
+        UserEvent e = new UserEvent();
         e.setUserId(userId); // who did it ?
-        e.setTimeOccured(LocalDateTime.now());
+        e.setTimeOccured(new Date());
         e.setEventName(getRandomElement(sportType)); // what happened ?
-        e.setDuration(Duration.ofMinutes(getRandomDuration())); // for how long (optional)?
+        e.setDurationInMinutes((int)Duration.ofMinutes(getRandomDuration()).toMinutes()); // for how long (optional)?
         e.setLocation(getRandomElement(townOptions)); // where did this happen (optional)?
         e.setPartnerName(getRandomElement(deviceOptions)); // at what partner did this happen (optional)?
     

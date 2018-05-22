@@ -9,9 +9,7 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
-import org.elasticsearch.client.ClusterAdminClient;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
-import org.elasticsearch.cluster.health.ClusterHealthStatus;
 
 /**
  * Simple health check that test that the graphDB is available.
@@ -30,20 +28,17 @@ public class ProfilingHealthCheck implements HealthCheck {
         
         HealthCheckResponseBuilder responseBuilder = HealthCheckResponse.named("profiling");
         
-        boolean up =false;
-        ClusterAdminClient clusterAdminClient = elasticsearchClient.getClient().admin().cluster();
-        try{
-            ClusterHealthResponse healths = clusterAdminClient.prepareHealth().get();
+        boolean up = elasticsearchClient.isHealthy();
         
-            ClusterHealthStatus status = healths.getStatus();
-            if(status.equals(ClusterHealthStatus.GREEN) || status.equals(ClusterHealthStatus.YELLOW))up = true;
-            
+        try{
+            ClusterHealthResponse healthDetails = elasticsearchClient.getHealthDetails();
+        
             responseBuilder = responseBuilder
-                .withData("clusterName", healths.getClusterName())
-                .withData("numberOfDataNodes", healths.getNumberOfDataNodes())
-                .withData("numberOfNodes", healths.getNumberOfNodes())
-                .withData("status", status.name())
-                .withData("activeShardsPercent", String.valueOf(healths.getActiveShardsPercent()) + "%");
+                .withData("clusterName", healthDetails.getClusterName())
+                .withData("numberOfDataNodes", healthDetails.getNumberOfDataNodes())
+                .withData("numberOfNodes", healthDetails.getNumberOfNodes())
+                .withData("status", healthDetails.getStatus().name())
+                .withData("activeShardsPercent", String.valueOf(healthDetails.getActiveShardsPercent()) + "%");
         }catch(NoNodeAvailableException nnae){
             responseBuilder = responseBuilder
                 .withData("exception", nnae.getMessage());
@@ -52,7 +47,5 @@ public class ProfilingHealthCheck implements HealthCheck {
         return responseBuilder.state(up).build();
         
     }
-    
-    
     
 }

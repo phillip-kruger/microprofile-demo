@@ -68,9 +68,6 @@ public class MembershipService {
     @GET @Path("{id}")
     @Counted(name = "Membership requests",absolute = true,monotonic = true)
     public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
-        
-
-        
         return em.find(Membership.class,id);
     }
 }
