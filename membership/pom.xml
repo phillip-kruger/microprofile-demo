@@ -568,16 +568,6 @@
                                 <configuration>
                                     <target>
                                         
-                                        <!-- Kill the prev running server -->
-                                        <sshexec 
-                                            trust="true"
-                                            verbose="false"
-                                            host="yellow"
-                                            username="pi"
-                                            password="${pi.password}"
-                                            command="kill `jps | grep payara-micro-${payara-micro.version}.jar | cut -d ' ' -f 1`"
-                                            failonerror="false"/>
-                                        
                                         <!-- Copy the new version -->
                                         <scp file="${project.build.directory}/${project.build.finalName}.war" 
                                              todir="pi:${pi.password}@yellow:/home/pi/microprofile-demo/"
@@ -591,7 +581,7 @@
                                             host="yellow"
                                             username="pi"
                                             password="${pi.password}"
-                                            command="nohup java -jar microprofile-demo/payara-micro-${payara-micro.version}.jar --disablephonehome --nocluster --nohostaware --logToFile microprofile-demo/${project.build.finalName}.log microprofile-demo/${project.build.finalName}.war > /dev/null &amp;"/>
+                                            command="sudo systemctl restart membership.service"/>
                                         
                                     </target>
                                 </configuration>
