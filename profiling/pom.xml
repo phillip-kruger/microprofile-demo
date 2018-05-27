@@ -18,8 +18,8 @@
         <!-- wildfly-swarm properties -->
         <debug.port>5005</debug.port>
         <wildfly-swarm.version>2018.6.0-SNAPSHOT</wildfly-swarm.version>
-        <wildfly-swarm.http.port>8080</wildfly-swarm.http.port>
-        <wildfly-swarm.https.port>8443</wildfly-swarm.https.port>
+        <wildfly-swarm.http.port>7080</wildfly-swarm.http.port>
+        <wildfly-swarm.https.port>7443</wildfly-swarm.https.port>
         <wildfly-swarm.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}wildfly-swarm</wildfly-swarm.installDir>
         <wildfly-swarm.deployDir>${wildfly-swarm.installDir}${file.separator}deployments</wildfly-swarm.deployDir>
         <wildfly-swarm.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}wildfly-swarm${file.separator}config</wildfly-swarm.configDir>
@@ -60,6 +60,12 @@
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>jaxrs-ext</artifactId>
+        </dependency>
+        
+        <!-- REST Client Exception Mappers -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>restclient-ext</artifactId>
         </dependency>
         
     </dependencies>

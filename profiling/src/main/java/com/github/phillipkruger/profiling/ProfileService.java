@@ -1,5 +1,6 @@
 package com.github.phillipkruger.profiling;
 
+import com.github.phillipkruger.profiling.membership.Membership;
 import com.github.phillipkruger.profiling.repository.EventLogger;
 import com.github.phillipkruger.profiling.repository.EventSearcher;
 import javax.enterprise.context.RequestScoped;
@@ -23,6 +24,16 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import com.github.phillipkruger.profiling.membership.MembershipProxy;
+import java.net.ConnectException;
+import java.time.temporal.ChronoUnit;
+import java.util.logging.Level;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response.Status;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.openapi.annotations.headers.Header;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 /**
  * Profiling Service. JAX-RS
@@ -41,6 +52,9 @@ public class ProfileService {
     @Inject
     private EventLogger eventLogger;
     
+    @Inject @RestClient
+    private MembershipProxy membershipProxy;
+    
     @POST
     @Operation(description = "Getting all the events for a certain user")
     @APIResponse(responseCode = "202", description = "Accepted the event, queued to be stored")
@@ -54,10 +68,19 @@ public class ProfileService {
     
     @GET @Path("user/{userId}")
     @Operation(description = "Getting all the events for a certain user")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successfull, returning events", content = @Content(schema = @Schema(implementation = UserEvent.class))),
+            @APIResponse(responseCode = "412", description = "Membership not found, invalid userId",headers = @Header(name = REASON))
+    })
     public Response getUserEvents(
             @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") @PathParam("userId") int userId, 
             @Parameter(name = "size", description = SIZE_DESC, required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") @QueryParam("size") int size){
         
+        try {
+            validateMembership(userId);
+        } catch (NotFoundException nfe){
+            return Response.status(Status.PRECONDITION_FAILED).header(REASON, "Membership [" + userId + "] does not exist").build();
+        }
         return eventSearcher.search(UserEventConverter.USER_ID,userId,size);
     }
     
@@ -86,5 +109,11 @@ public class ProfileService {
         return eventSearcher.search(UserEventConverter.PARTNER_NAME,partner,size);
     }
     
+    private void validateMembership(int membershipId) {
+        Membership membership = membershipProxy.getMembership(membershipId);
+        log.log(Level.FINEST, "Validate membership = [{0}]", membership);
+    }
+    
     private static final String SIZE_DESC = "Limit the events to return";
+    private static final String REASON = "reason";
 }

@@ -1,9 +1,7 @@
 package com.github.phillipkruger.membership;
 
-import java.sql.SQLNonTransientConnectionException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
@@ -58,13 +56,9 @@ public class MembershipService {
     
     @GET
     @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
+    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
     public List<Membership> getAllMemberships() {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException ex) {
-            log.log(Level.SEVERE, null, ex);
-        }
-        
         TypedQuery<Membership> query = em.createNamedQuery(Membership.QUERY_FIND_ALL, Membership.class);
         return query.getResultList();
     }

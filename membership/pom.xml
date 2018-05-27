@@ -26,7 +26,6 @@
         <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
-        <h2.version>1.4.197</h2.version>
         <mysql.version>8.0.11</mysql.version>
     </properties>
     
@@ -56,10 +55,16 @@
             <artifactId>health-ext</artifactId>
         </dependency>
         
-        <!-- JAX-RS Exception Mappers -->
+        <!-- JAX-RS Runtime Exception Mappers -->
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>jaxrs-ext</artifactId>
+        </dependency>
+        
+        <!-- JAX-RS Bean validation Mappers -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>beanval-ext</artifactId>
         </dependency>
     </dependencies>
     

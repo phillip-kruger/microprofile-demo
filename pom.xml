@@ -109,6 +109,16 @@
                 <artifactId>jaxrs-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>beanval-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>restclient-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     
