@@ -104,7 +104,7 @@
     
     <profiles>
         
-        <!-- Deploy to Red Raspberry Pi -->
+        <!-- Run on localhost -->
         <profile>
             <id>run</id>
             <activation>

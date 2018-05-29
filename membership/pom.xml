@@ -16,6 +16,7 @@
     
     <properties>
         <!-- payara-micro properties -->
+        <debug.port>5006</debug.port>    
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
         <payara-micro.version>5.181</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>

@@ -26,12 +26,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
-import java.net.ConnectException;
-import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response.Status;
-import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 

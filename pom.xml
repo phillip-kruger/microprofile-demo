@@ -182,6 +182,7 @@
     <modules>
         <module>membership</module>
         <module>profiling</module>
+        <module>user</module>
     </modules>
     
 </project>
