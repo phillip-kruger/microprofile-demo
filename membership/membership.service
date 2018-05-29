@@ -1,0 +1,12 @@
+[Unit]
+Description=Membership service
+
+[Service]
+ExecStart=/home/pi/microprofile-demo/start.sh
+ExecStop=/home/pi/microprofile-demo/stop.sh
+KillMode=process
+User=pi
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

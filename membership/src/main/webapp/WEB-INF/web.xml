@@ -8,12 +8,16 @@
             30
         </session-timeout>
     </session-config>    
+    
     <data-source>
         <name>java:global/membership/MembershipDS</name>
-        <class-name>org.h2.jdbcx.JdbcDataSource</class-name>
-        <url>jdbc:h2:mem:membership;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</url>
-        <user>sa</user>
-        <password>sa</password>
+        <class-name>com.mysql.cj.jdbc.MysqlXADataSource</class-name>
+        <server-name>localhost</server-name>
+        <port-number>3306</port-number>
+        <database-name>membership</database-name>
+        <user>payara</user>
+        <password>p@y@r@123</password>
         <transactional>true</transactional>
     </data-source>
+    
 </web-app>

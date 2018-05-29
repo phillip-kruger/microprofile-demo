@@ -59,7 +59,7 @@
         <javaee.version>8.0</javaee.version>
         <microProfile.version>1.3</microProfile.version>
         <lombok.version>1.16.20</lombok.version>
-        <microProfile.ext.version>1.0.4-SNAPSHOT</microProfile.ext.version>
+        <microProfile.ext.version>1.0.5-SNAPSHOT</microProfile.ext.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        
@@ -104,7 +104,21 @@
                 <artifactId>openapi-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>jaxrs-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>beanval-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>restclient-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     
@@ -168,6 +182,7 @@
     <modules>
         <module>membership</module>
         <module>profiling</module>
+        <module>user</module>
     </modules>
     
 </project>

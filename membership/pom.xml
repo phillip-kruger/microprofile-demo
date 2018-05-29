@@ -16,6 +16,7 @@
     
     <properties>
         <!-- payara-micro properties -->
+        <debug.port>5006</debug.port>    
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
         <payara-micro.version>5.181</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>
@@ -26,7 +27,7 @@
         <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
-        <h2.version>1.4.197</h2.version>
+        <mysql.version>8.0.11</mysql.version>
     </properties>
     
     <dependencyManagement>
@@ -44,15 +45,27 @@
         
         <!-- Database -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
         
         <!-- Microprofile Health ext -->
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>health-ext</artifactId>
+        </dependency>
+        
+        <!-- JAX-RS Runtime Exception Mappers -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>jaxrs-ext</artifactId>
+        </dependency>
+        
+        <!-- JAX-RS Bean validation Mappers -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>beanval-ext</artifactId>
         </dependency>
     </dependencies>
     
@@ -556,16 +569,6 @@
                                 <configuration>
                                     <target>
                                         
-                                        <!-- Kill the prev running server -->
-                                        <sshexec 
-                                            trust="true"
-                                            verbose="false"
-                                            host="yellow"
-                                            username="pi"
-                                            password="${pi.password}"
-                                            command="kill `jps | grep payara-micro-${payara-micro.version}.jar | cut -d ' ' -f 1`"
-                                            failonerror="false"/>
-                                        
                                         <!-- Copy the new version -->
                                         <scp file="${project.build.directory}/${project.build.finalName}.war" 
                                              todir="pi:${pi.password}@yellow:/home/pi/microprofile-demo/"
@@ -579,7 +582,7 @@
                                             host="yellow"
                                             username="pi"
                                             password="${pi.password}"
-                                            command="nohup java -jar microprofile-demo/payara-micro-${payara-micro.version}.jar --disablephonehome --nocluster --nohostaware --logToFile microprofile-demo/${project.build.finalName}.log microprofile-demo/${project.build.finalName}.war > /dev/null &amp;"/>
+                                            command="sudo systemctl restart membership.service"/>
                                         
                                     </target>
                                 </configuration>

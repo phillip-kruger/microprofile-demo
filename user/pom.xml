@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.phillip-kruger</groupId>
+        <artifactId>microprofile-demo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+    
+    <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
+    <artifactId>user</artifactId>
+    <packaging>war</packaging>
+    
+    <name>Microprofile Demo :: User</name>
+    
+    <properties>
+        <!-- Open Liberty properties -->
+        <log.name>com.github.phillipkruger.user</log.name>
+        <log.level>FINEST</log.level>
+        <debug.port>5007</debug.port>    
+        <openliberty.version>18.0.0.1</openliberty.version>
+        <openliberty.http.port>9080</openliberty.http.port>
+        <openliberty.https.port>9443</openliberty.https.port>
+        <openliberty.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}openliberty</openliberty.installDir>
+        <openliberty.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}openliberty${file.separator}config</openliberty.configDir>
+        <openliberty.logsDir>${openliberty.installDir}${file.separator}wlp${file.separator}usr${file.separator}servers${file.separator}defaultServer${file.separator}logs</openliberty.logsDir>
+        <openliberty.maven.version>2.2</openliberty.maven.version>
+        <openliberty.Xms>64m</openliberty.Xms>
+        <openliberty.Xmx>128m</openliberty.Xmx>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.ibm.websphere.appserver.api</groupId>
+            <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
+            <version>1.1.20</version>
+            <scope>provided</scope>
+        </dependency>
+        
+    </dependencies>
+    
+    <build>
+                
+        <plugins>
+            <!-- Copy config (with resource filter) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+
+                            <resources>
+                                <!-- Open Liberty config -->
+                                <resource>
+                                    <directory>${openliberty.configDir}</directory>
+                                    <targetPath>${project.build.directory}</targetPath>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>server.xml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Open Liberty plugin -->
+            <plugin>
+                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>${openliberty.maven.version}</version>
+
+                <configuration>
+                    <assemblyArtifact>
+                        <groupId>io.openliberty</groupId>
+                        <artifactId>openliberty-runtime</artifactId>
+                        <version>${openliberty.version}</version>
+                        <type>zip</type>
+                    </assemblyArtifact>
+                </configuration>
+            </plugin>
+            
+        </plugins>
+    </build>
+    
+    <profiles>
+        
+        <!-- Run on localhost -->
+        <profile>
+            <id>run</id>
+            <activation>
+                <property>
+                    <name>run</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                        <artifactId>liberty-maven-plugin</artifactId>
+                        
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>install-server</goal>
+                                    <goal>create-server</goal>
+                                    <goal>run-server</goal>    
+                                </goals>
+
+                                <configuration>
+                                    <configFile>${project.build.directory}${file.separator}server.xml</configFile>
+                                    <bootstrapProperties>
+                                        <httpPort>${openliberty.http.port}</httpPort>
+                                        <httpsPort>${openliberty.https.port}</httpsPort>
+                                    </bootstrapProperties>
+                                    <jvmOptions>
+                                        <param>-Xms${openliberty.Xms}</param>
+                                        <param>-Xmx${openliberty.Xmx}</param>
+                                        <param>-Xdebug</param>
+                                        <param>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</param>
+                                    </jvmOptions>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <!-- Deploy to Blue Raspberry Pi -->
+        <profile>
+            <id>blue-pi</id>
+            <activation>
+                <property>
+                    <name>blue-pi</name>
+                </property>
+            </activation>
+            
+            <build>
+            
+                <plugins>
+                   
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        
+                        <executions>
+                            <execution>
+                                <id>redeploy</id>
+                                <phase>install</phase>
+                                <configuration>
+                                    <target>
+                                        <!-- Copy the new version -->
+                                        <scp file="${project.build.directory}${file.separator}${project.artifactId}.jar" 
+                                             todir="pi:${pi.password}@blue:/home/pi/microprofile-demo/"
+                                             trust="true"
+                                        />
+                                        
+                                        <!-- Start the server -->
+                                        <sshexec 
+                                            trust="true"
+                                            verbose="false"
+                                            host="blue"
+                                            username="pi"
+                                            password="${pi.password}"
+                                            command="sudo systemctl restart user.service"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                </plugins>
+            </build>
+        </profile>
+        
+    </profiles>
+    
+</project>

@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,20 +25,21 @@ import lombok.NoArgsConstructor;
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
 @Data @AllArgsConstructor @NoArgsConstructor
-@Entity
+@Entity(name = Person.NAME) @Table(name = Person.NAME)
 @XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
 public class Person implements Serializable {
     private static final long serialVersionUID = -8531040143398373846L;
-
-    @Id
+    
+    @Id @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
-    @Column(name = "name")
+    @Column(name = "NAME")
     @ElementCollection(fetch = FetchType.EAGER,targetClass=String.class)
     @Size(min=1,max=4, message = "Name can not be empty")
     private List<String> names;
     
+    @Column(name = "SURNAME")
     @NotNull(message = "Surname can not be empty") 
     @Size(min=2, message = "Surname '${validatedValue}' is too short, minimum {min} characters")
     private String surname;
@@ -46,4 +48,6 @@ public class Person implements Serializable {
         if(names==null)names = new LinkedList<>();
         names.add(name);
     }
+    
+    public static final String NAME = "PERSON";
 }
