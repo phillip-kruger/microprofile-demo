@@ -15,8 +15,6 @@
     <applicationManager autoExpand="true" />
 
     <keyStore id="defaultKeyStore" password="0p3nL1b3ry"/>
-    
-    <!--<quickStartSecurity userName="admin" userPassword="adminpwd"/>-->
 
     <basicRegistry id="basic" realm="WebRealm">
         <user name="bob" password="{xor}PTA9Lyg7" />  <!-- bobpwd -->
