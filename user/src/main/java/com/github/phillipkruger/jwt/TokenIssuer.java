@@ -1,8 +1,5 @@
-package com.github.phillipkruger.user;
+package com.github.phillipkruger.jwt;
 
-import com.github.phillipkruger.jwt.Payload;
-import com.github.phillipkruger.jwt.Token;
-import com.github.phillipkruger.jwt.TokenJsonWriter;
 import java.time.Duration;
 import java.util.List;
 import javax.enterprise.context.Dependent;
@@ -23,7 +20,7 @@ public class TokenIssuer {
     
     public String issue(String username,List<String> roles){
         
-        Payload p = new Payload();
+        Token p = new Token();
         p.setUserPrincipal(username);
         p.setTokenIssuer(tokenIssuer);
         p.setSubject(tokenSubject);
@@ -34,11 +31,7 @@ public class TokenIssuer {
             p.addAudienceMember(member);
         }
         
-        Token t = new Token(p);
-        
-        log.severe("token = " + t);
-        
-        return tokenJsonWriter.toString(t);
+        return tokenJsonWriter.toString(p);
     }
     
     @Inject @ConfigProperty(name = "jwt.token.issuer")

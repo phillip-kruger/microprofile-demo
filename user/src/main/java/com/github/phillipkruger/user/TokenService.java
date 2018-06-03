@@ -1,5 +1,7 @@
 package com.github.phillipkruger.user;
 
+import com.github.phillipkruger.jwt.TokenIssuer;
+import com.github.phillipkruger.jwt.TokenSigner;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,8 +21,6 @@ import java.util.stream.Collectors;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -29,6 +29,7 @@ import javax.ws.rs.core.SecurityContext;
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  * @see https://docs.payara.fish/documentation/microprofile/jwt.html
  * @see https://github.com/javaee-samples/microprofile1.2-samples/tree/master/jwt-auth
+ * TODO: Add Metrics
  */
 @DeclareRoles({USER_ROLE,ADMIN_ROLE})
 @Log
@@ -44,52 +45,23 @@ public class TokenService {
     @Inject
     private TokenIssuer tokenIssuer;
     
-    @GET
-    @Operation(description = "Ping to test")
-    @APIResponse(responseCode = "200", description = "Received the ping, return a pong")
-    @RolesAllowed({ "admin", "user" })
-    public Response ping(){
-        
-        String authenticationScheme = securityContext.getAuthenticationScheme();
-        log.severe(">> authenticationScheme = " + authenticationScheme);
-        
-        boolean secure = securityContext.isSecure();
-        log.severe(">> secure = " + secure);
-        
-        boolean isAdmin = securityContext.isUserInRole(ADMIN_ROLE);
-        log.severe(">> isAdmin = " + isAdmin);
-        
-        boolean isUser = securityContext.isUserInRole(USER_ROLE);
-        log.severe(">> isUser = " + isUser);
-        
-        Principal userPrincipal = securityContext.getUserPrincipal();
-        String username = userPrincipal.getName();
-        log.severe(">> username = " + username);
-        
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        b.add("ping", "pong");
-        
-        return Response.ok(b.build().toString()).build();
-    }
+    @Inject
+    private TokenSigner tokenSigner;
+    
     
     @GET @Path("/issue")
     @Operation(description = "Issue a JWT Token for the logged in user")
     @APIResponse(responseCode = "200", description = "Get the signed token")
-    @RolesAllowed({ "admin", "user" })
+    @RolesAllowed({ USER_ROLE,ADMIN_ROLE })
     public Response issueToken(){
-        
-        //return Response.ok(JOSEKeyCreator.generateJWTString()).build();
-        
-        // TODO: Check if there is a valid token ?
         
         Principal userPrincipal = securityContext.getUserPrincipal();
         String username = userPrincipal.getName();
-        log.severe(">> username = " + username);
         List<String> roles = getUserRoles();
-        log.severe(">> roles = " + roles);
         String token = tokenIssuer.issue(username, roles);
-        log.severe(">> token = " + token);
-        return Response.ok(token).build();
+        String signToken = tokenSigner.signToken(token);
+        
+        return Response.ok(signToken).build();
     }
     
     private List<String> getUserRoles() {

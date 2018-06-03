@@ -20,30 +20,11 @@ public class TokenJsonWriter {
     }
     
     public JsonObject toJsonObject(Token token){
-        JsonObjectBuilder jtoken = Json.createObjectBuilder();
-        
-        JsonObject header = getHeader(token.getHeader());
-        log.severe("> header " + header.toString());
-        jtoken.add(HEADER,header);
-        
-        JsonObject payload = getPayload(token.getPayload());
-        log.severe("> payload " + payload.toString());
-        jtoken.add(PAYLOAD,payload);
-        return jtoken.build();
+        JsonObject payload = getPayload(token);
+        return payload;
     }
     
-    private JsonObject getHeader(Header header){
-        JsonObjectBuilder jheader = Json.createObjectBuilder();
-        
-        jheader.add(HEADER_TYPE, header.getType());
-        jheader.add(HEADER_ALGORITHM, header.getAlgorithm());
-        if(header.getKeyHint().isPresent()){
-            jheader.add(Claims.kid.name(), header.getKeyHint().get());
-        }
-        return jheader.build();
-    }
-    
-    private JsonObject getPayload(Payload payload){
+    private JsonObject getPayload(Token payload){
         JsonObjectBuilder jpayload = Json.createObjectBuilder();
         jpayload.add(Claims.jti.name(), payload.getTokenId());
         jpayload.add(Claims.iss.name(), payload.getTokenIssuer());
@@ -71,11 +52,4 @@ public class TokenJsonWriter {
         }
         return arrayBuilder;
     }
-    
-    private static final String HEADER = "header";
-    private static final String PAYLOAD = "payload";
-    
-    private static final String HEADER_TYPE = "typ";
-    private static final String HEADER_ALGORITHM = "alg";
-   
 }
