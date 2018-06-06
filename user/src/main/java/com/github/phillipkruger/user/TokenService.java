@@ -12,8 +12,6 @@ import lombok.extern.java.Log;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import static com.github.phillipkruger.user.SecurityRoles.ADMIN_ROLE;
-import static com.github.phillipkruger.user.SecurityRoles.USER_ROLE;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +22,8 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import static com.github.phillipkruger.user.SecurityRoles.ADMIN_ROLE;
+import static com.github.phillipkruger.user.SecurityRoles.USER_ROLE;
 /**
  * Token Service. JAX-RS
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)

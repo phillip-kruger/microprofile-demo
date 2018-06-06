@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -44,6 +45,11 @@ public class Person implements Serializable {
     @Size(min=2, message = "Surname '${validatedValue}' is too short, minimum {min} characters")
     private String surname;
  
+    @Column(name = "EMAIL",unique = true)
+    @NotNull(message = "Email can not be empty") 
+    @Email(message = "Invalid email '${validatedValue}'")
+    private String email;
+    
     public void addName(String name){
         if(names==null)names = new LinkedList<>();
         names.add(name);

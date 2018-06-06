@@ -17,18 +17,20 @@
     <keyStore id="defaultKeyStore" password="0p3nL1b3ry"/>
 
     <basicRegistry id="basic" realm="WebRealm">
-        <user name="bob" password="{xor}PTA9Lyg7" />  <!-- bobpwd -->
-        <user name="alice" password="{xor}PjM2PDovKDs=" />  <!-- alicepwd -->
-        <user name="carl" password="{xor}PD4tMy8oOw==" />   <!-- carlpwd -->
+        <user name="phillip.kruger@gmail.com" password="{xor}Lzc2MzM2Ly8oOw==" />  <!-- phillippwd -->
+        <user name="charmaine.kruger@gmail.com" password="{xor}PDc+LTI+NjE6Lyg7" />  <!-- charmainepwd -->
+        <user name="koos@gmail.com" password="{xor}NDAwLC8oOw==" />   <!-- koospwd -->
+        <user name="minki@gmail.com" password="{xor}MjYxNDYvKDs=" />   <!-- minkipwd -->
 
         <group name="admin">
-            <member name="bob" />
+            <member name="phillip.kruger@gmail.com" />
         </group>
 
         <group name="user">
-            <member name="bob" />
-            <member name="alice" />
-            <member name="carl" />
+            <member name="phillip.kruger@gmail.com" />
+            <member name="charmaine.kruger@gmail.com" />
+            <member name="koos@gmail.com" />
+            <member name="minki@gmail.com" />
         </group>
     </basicRegistry>
     
