@@ -10,4 +10,5 @@ public class Person {
     private int id;
     private List<String> names;
     private String surname;
+    private String email;
 }

@@ -26,6 +26,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
 @Log
@@ -44,6 +45,9 @@ public class EventLogger {
     
     @Inject @RestClient
     private MembershipProxy membershipProxy;
+    
+    @Inject
+    private JsonWebToken callerPrincipal;
     
     @Counted(name = "Events logged",absolute = true,monotonic = true)
     @Asynchronous
@@ -79,7 +83,7 @@ public class EventLogger {
     }
     
     private void validateMembership(int membershipId) {
-        Membership membership = membershipProxy.getMembership(membershipId);
+        Membership membership = membershipProxy.getMembership("Bearer " + callerPrincipal.getRawToken(), membershipId);
         log.log(Level.FINEST, "Validate membership = [{0}]", membership);
     }
 }

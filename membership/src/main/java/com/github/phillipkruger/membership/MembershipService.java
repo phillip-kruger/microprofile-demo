@@ -1,7 +1,6 @@
 package com.github.phillipkruger.membership;
 
 import com.github.phillipkruger.microprofileextentions.jwt.UserAccess;
-import java.sql.SQLNonTransientConnectionException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.logging.Level;
@@ -81,6 +80,4 @@ public class MembershipService {
     public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
         return em.find(Membership.class,id);
     }
-    
-    
 }

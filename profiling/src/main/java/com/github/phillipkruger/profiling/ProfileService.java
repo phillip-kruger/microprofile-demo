@@ -26,14 +26,11 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
-import java.util.Set;
 import java.util.logging.Level;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -46,8 +43,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 @RequestScoped
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-@DeclareRoles({"user", "admin"})
 @Tag(name = "Profile service",description = "Build up a profile of the user")
+@DeclareRoles({"user", "admin"})
 public class ProfileService {
     
     @Inject
@@ -79,31 +76,11 @@ public class ProfileService {
             @APIResponse(responseCode = "200", description = "Successfull, returning events", content = @Content(schema = @Schema(implementation = UserEvent.class))),
             @APIResponse(responseCode = "412", description = "Membership not found, invalid userId",headers = @Header(name = REASON))
     })
-    @RolesAllowed({"admin", "user"})
+    //@SecurityScheme(apiKeyName = "Authorization", in = SecuritySchemeIn.HEADER, type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
+    @RolesAllowed({"admin","user"})
     public Response getUserEvents(
             @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") @PathParam("userId") int userId, 
-            @Parameter(name = "size", description = SIZE_DESC, required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") @QueryParam("size") int size,
-            @Context SecurityContext securityContext){
-        
-        
-        String name = callerPrincipal.getName();
-        String issuer = callerPrincipal.getIssuer();
-        String subject = callerPrincipal.getSubject();
-        String tokenId = callerPrincipal.getTokenID();
-        Long expire = callerPrincipal.getExpirationTime();
-        Long issue = callerPrincipal.getIssuedAtTime();
-        Set<String> groups = callerPrincipal.getGroups();
-        
-        log.severe("name = " + name);
-        log.severe("issuer = " + issuer);
-        log.severe("subject = " + subject);
-        log.severe("tokenId = " + tokenId);
-        log.severe("expire = " + expire);
-        log.severe("issue = " + issue);
-        
-        for(String g:groups){
-            log.severe("> group = " + g);
-        }
+            @Parameter(name = "size", description = SIZE_DESC, required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") @QueryParam("size") int size){
         
         try {
             validateMembership(userId);
@@ -139,7 +116,7 @@ public class ProfileService {
     }
     
     private void validateMembership(int membershipId) {
-        Membership membership = membershipProxy.getMembership(membershipId);
+        Membership membership = membershipProxy.getMembership("Bearer " + callerPrincipal.getRawToken() , membershipId);
         log.log(Level.FINEST, "Validate membership = [{0}]", membership);
     }
     

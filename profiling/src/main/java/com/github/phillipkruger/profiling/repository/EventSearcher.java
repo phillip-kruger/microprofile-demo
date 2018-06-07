@@ -1,9 +1,7 @@
 package com.github.phillipkruger.profiling.repository;
 
-import com.github.phillipkruger.profiling.membership.Membership;
 import java.io.StringReader;
 import java.time.temporal.ChronoUnit;
-import java.util.logging.Level;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.Json;
@@ -23,7 +21,6 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import com.github.phillipkruger.profiling.membership.MembershipProxy;
 
 @RequestScoped
 @Log

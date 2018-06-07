@@ -68,11 +68,6 @@
             <artifactId>restclient-ext</artifactId>
         </dependency>
         
-<!--        <dependency>
-            <groupId>org.wildfly.swarm</groupId>
-            <artifactId>microprofile-jwt</artifactId>
-            <scope>provided</scope>
-      </dependency>-->
         
     </dependencies>
     
@@ -141,6 +136,7 @@
                                 <argument>-Xdebug</argument>
                                 <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</argument>
                                 <argument>${project.build.directory}${file.separator}${project.artifactId}-swarm.jar</argument>
+                                
                             </arguments>
                         </configuration>
                     </plugin>

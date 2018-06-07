@@ -50,6 +50,10 @@
     
     <logging traceSpecification="${log.name}.*=${log.level}"/>
     
+    <!--<mpJwt id="mpJwt" issuer="org.eclipse.microprofile12" audiences="s6BhdRkqt3" />-->
+    
+    
+    
     <!--<jwtBuilder id="jwtFrontEndBuilder" issuer="${jwt.issuer}" expiry="24h" keyAlias="default" audiences="simpleapp"/>-->
     <!-- The MP JWT configuration that injects the caller's JWT into a ResourceScoped bean for inspection. -->
     <!--<mpJwt id="jwtUserConsumer" keyName="default" audiences="simpleapp" issuer="${jwt.issuer}"/>-->
