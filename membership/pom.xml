@@ -67,6 +67,12 @@
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>beanval-ext</artifactId>
         </dependency>
+        
+        <!-- JWT ext -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>jwt-user-ext</artifactId>
+        </dependency>
     </dependencies>
     
     
