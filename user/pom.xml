@@ -31,11 +31,10 @@
     </properties>
     
     <dependencies>
-        <!-- To generate the JWT token -->
+        <!-- JWT Issuer -->
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>5.10</version>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>jwt-issuer-ext</artifactId>
         </dependency>
     </dependencies>
     
