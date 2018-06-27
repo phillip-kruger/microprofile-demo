@@ -1,6 +1,7 @@
 package com.github.phillipkruger.membership;
 
 import com.github.phillipkruger.microprofileextentions.jwt.UserAccess;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.security.RolesAllowed;
@@ -12,26 +13,29 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.java.Log;
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn;
-import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
+import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.opentracing.Traced;
 
 /**
  * Membership Service. JAX-RS
@@ -51,9 +55,9 @@ public class MembershipService {
     @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
     @Operation(description = "Get all the current memberships")
     @APIResponse(responseCode = "200", description = "Successful, returning the memberships")
-    //@Timeout(value = 5 , unit = ChronoUnit.SECONDS)
-    //@CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
     @RolesAllowed({"admin"})
+    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
     public List<Membership> getAllMemberships() {
         TypedQuery<Membership> query = em.createNamedQuery(Membership.QUERY_FIND_ALL, Membership.class);
         return query.getResultList();
@@ -69,19 +73,18 @@ public class MembershipService {
     })
     @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
-    //@UserAccess(pathToUserName = "owner.email" , ignoreGroups = {"admin"})
-    public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
+    @UserAccess(pathToUserName = "owner.email" , ignoreGroups = {"admin"})
+    @Traced(operationName = "GetMembershipById", value = true)
+    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS ) // TODO: Runtime not working ... will have to be specific
+    public Membership getMembership(@NotNull @Parameter(required = true, in = ParameterIn.HEADER,name = "authorization") @HeaderParam("authorization") String bearer, @NotNull @PathParam(value = "id") int id) {
         return em.find(Membership.class,id);
     }
    
-    //@Timeout(value = 5 , unit = ChronoUnit.SECONDS)
-    //@CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS ) // TODO: Runtime not working ... will have to be specific
-    
     @POST
     @Counted(name = "Membership created",absolute = true,monotonic = true)
     @Operation(description = "Create a new Membership")
     @APIResponse(responseCode = "200", description = "Successful, returning the created membership")
-    //@RolesAllowed({"admin"})
     public Membership createMembership(@NotNull @RequestBody(description = "The membership",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,schema = @Schema(implementation = Membership.class)))
             Membership membership){
@@ -95,7 +98,7 @@ public class MembershipService {
     @Counted(name = "Membership deleted",absolute = true,monotonic = true)
     @RolesAllowed({"admin"})
     public Membership deleteMembership(@NotNull @PathParam(value = "id") int id){
-        Membership membership = getMembership(id);
+        Membership membership = em.find(Membership.class,id);
         if(membership!=null){
             em.remove(membership);
         }

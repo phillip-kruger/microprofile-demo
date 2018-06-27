@@ -24,13 +24,16 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.opentracing.Traced;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
 import java.util.logging.Level;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -58,6 +61,9 @@ public class ProfileService {
     @Inject
     private JsonWebToken callerPrincipal;
     
+    //@Inject
+    //private io.opentracing.Tracer tracer;
+    
     @POST
     @Operation(description = "Getting all the events for a certain user")
     @APIResponse(responseCode = "202", description = "Accepted the event, queued to be stored")
@@ -72,15 +78,20 @@ public class ProfileService {
     @GET @Path("user/{userId}")
     @Operation(description = "Getting all the events for a certain user")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfull, returning events", content = @Content(schema = @Schema(implementation = UserEvent.class))),
+            @APIResponse(responseCode = "200", description = "Successfull, returning events", 
+                    content = @Content(schema = @Schema(implementation = UserEvent.class))),
             @APIResponse(responseCode = "401", description = "User not authorized"),
-            @APIResponse(responseCode = "412", description = "Membership not found, invalid userId",headers = @Header(name = REASON))
+            @APIResponse(responseCode = "412", description = "Membership not found, invalid userId",
+                    headers = @Header(name = REASON))
     })
     @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
+    @Traced(operationName = "GetUserEvents", value = true)
     public Response getUserEvents(
-            @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") @PathParam("userId") int userId, 
-            @Parameter(name = "size", description = SIZE_DESC, required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") @QueryParam("size") int size){
+            @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") 
+                @PathParam("userId") int userId, 
+            @Parameter(name = "size", description = SIZE_DESC, required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") 
+                @QueryParam("size") int size){
         
         try {
             validateMembership(userId);
@@ -90,7 +101,6 @@ public class ProfileService {
         return eventSearcher.search(UserEventConverter.USER_ID,userId,size);
     }
     
-    // TODO: Add user per day
     @GET @Path("event/{eventName}")
     public Response searchEvents(
             @Parameter(name = "eventName", description = "The name of the event", required = true, allowEmptyValue = false, example = "Gym") @PathParam("eventName") String eventName, 

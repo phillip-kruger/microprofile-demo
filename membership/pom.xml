@@ -95,6 +95,7 @@
                     </artifactItem>
                     <payaraVersion>${payara-micro.version}</payaraVersion>
                     <commandLineOptions>
+                        
                         <option>
                             <key>--port</key>
                             <value>${payara-micro.http.port}</value>
@@ -116,7 +117,7 @@
                             <key>--domainconfig</key>
                             <value>${project.build.directory}/domain.xml</value>
                         </option>
- 
+                        
                     </commandLineOptions>
                     
                     <deployArtifacts>
