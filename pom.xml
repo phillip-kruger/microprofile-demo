@@ -129,6 +129,11 @@
                 <artifactId>jwt-issuer-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <artifactId>config-ext</artifactId>
+                <version>${microProfile.ext.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     

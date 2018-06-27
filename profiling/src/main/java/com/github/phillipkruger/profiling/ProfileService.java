@@ -27,13 +27,13 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
 import java.util.logging.Level;
-import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 
 /**
  * Profiling Service. JAX-RS
@@ -44,7 +44,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Profile service",description = "Build up a profile of the user")
-@DeclareRoles({"user", "admin"})
 public class ProfileService {
     
     @Inject
@@ -74,9 +73,10 @@ public class ProfileService {
     @Operation(description = "Getting all the events for a certain user")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Successfull, returning events", content = @Content(schema = @Schema(implementation = UserEvent.class))),
+            @APIResponse(responseCode = "401", description = "User not authorized"),
             @APIResponse(responseCode = "412", description = "Membership not found, invalid userId",headers = @Header(name = REASON))
     })
-    //@SecurityScheme(apiKeyName = "Authorization", in = SecuritySchemeIn.HEADER, type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
+    @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
     public Response getUserEvents(
             @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") @PathParam("userId") int userId, 

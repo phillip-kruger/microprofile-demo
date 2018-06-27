@@ -25,17 +25,24 @@
         <openliberty.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}openliberty</openliberty.installDir>
         <openliberty.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}openliberty${file.separator}config</openliberty.configDir>
         <openliberty.logsDir>${openliberty.installDir}${file.separator}wlp${file.separator}usr${file.separator}servers${file.separator}defaultServer${file.separator}logs</openliberty.logsDir>
-        <openliberty.maven.version>2.2</openliberty.maven.version>
+        <openliberty.maven.version>2.4.2</openliberty.maven.version>
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
     </properties>
     
     <dependencies>
-        <!-- JWT Issuer -->
+        <!-- To generate the JWT token -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>5.12</version>
+        </dependency>
+        <!-- JAX-RS Exception Mappers -->
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
-            <artifactId>jwt-issuer-ext</artifactId>
+            <artifactId>jaxrs-ext</artifactId>
         </dependency>
+    
     </dependencies>
     
     <build>
@@ -85,6 +92,7 @@
                         <version>${openliberty.version}</version>
                         <type>zip</type>
                     </assemblyArtifact>
+                    <configFile>${project.build.directory}${file.separator}server.xml</configFile>
                 </configuration>
             </plugin>
             
@@ -93,7 +101,7 @@
     
     <profiles>
         
-        <!-- Run on localhost -->
+         <!--Run on localhost--> 
         <profile>
             <id>run</id>
             <activation>
@@ -132,6 +140,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    
                 </plugins>
             </build>
         </profile>

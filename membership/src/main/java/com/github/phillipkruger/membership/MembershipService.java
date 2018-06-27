@@ -1,10 +1,8 @@
 package com.github.phillipkruger.membership;
 
 import com.github.phillipkruger.microprofileextentions.jwt.UserAccess;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.logging.Level;
-import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
@@ -20,11 +18,20 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.java.Log;
-import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 /**
  * Membership Service. JAX-RS
@@ -34,23 +41,57 @@ import org.eclipse.microprofile.metrics.annotation.Timed;
 @RequestScoped
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-@DeclareRoles({"user", "admin"})
+@Tag(name = "Membership service", description = "Managing the membership")
 public class MembershipService {
     
     @PersistenceContext(name="MembershipDS")
     private EntityManager em;
     
+    @GET
+    @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
+    @Operation(description = "Get all the current memberships")
+    @APIResponse(responseCode = "200", description = "Successful, returning the memberships")
+    //@Timeout(value = 5 , unit = ChronoUnit.SECONDS)
+    //@CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
+    @RolesAllowed({"admin"})
+    public List<Membership> getAllMemberships() {
+        TypedQuery<Membership> query = em.createNamedQuery(Membership.QUERY_FIND_ALL, Membership.class);
+        return query.getResultList();
+    }
+    
+    @GET 
+    @Path("{id}")
+    @Counted(name = "Membership requests",absolute = true,monotonic = true)
+    @Operation(description = "Get a certain Membership by id")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successfull, returning membership", content = @Content(mediaType = MediaType.APPLICATION_JSON,schema = @Schema(implementation = Membership.class))),
+            @APIResponse(responseCode = "401", description = "User not authorized")
+    })
+    @SecurityRequirement(name = "Authorization")
+    @RolesAllowed({"admin","user"})
+    //@UserAccess(pathToUserName = "owner.email" , ignoreGroups = {"admin"})
+    public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
+        return em.find(Membership.class,id);
+    }
+   
+    //@Timeout(value = 5 , unit = ChronoUnit.SECONDS)
+    //@CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS ) // TODO: Runtime not working ... will have to be specific
     
     @POST
     @Counted(name = "Membership created",absolute = true,monotonic = true)
-    @RolesAllowed({"admin"})
-    public Membership createMembership(@NotNull Membership membership){
+    @Operation(description = "Create a new Membership")
+    @APIResponse(responseCode = "200", description = "Successful, returning the created membership")
+    //@RolesAllowed({"admin"})
+    public Membership createMembership(@NotNull @RequestBody(description = "The membership",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,schema = @Schema(implementation = Membership.class)))
+            Membership membership){
         membership = em.merge(membership);
         log.log(Level.INFO, "Created membership [{0}]", membership);
         return membership;    
     }
     
-    @DELETE @Path("{id}")
+    @DELETE 
+    @Path("{id}")
     @Counted(name = "Membership deleted",absolute = true,monotonic = true)
     @RolesAllowed({"admin"})
     public Membership deleteMembership(@NotNull @PathParam(value = "id") int id){
@@ -59,25 +100,5 @@ public class MembershipService {
             em.remove(membership);
         }
         return membership;
-    }
-    
-    @GET
-    @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
-    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
-    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
-    @RolesAllowed({"admin"})
-    public List<Membership> getAllMemberships() {
-        TypedQuery<Membership> query = em.createNamedQuery(Membership.QUERY_FIND_ALL, Membership.class);
-        return query.getResultList();
-    }
-    
-    @GET @Path("{id}")
-    @Counted(name = "Membership requests",absolute = true,monotonic = true)
-    @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
-    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS ) // TODO: Runtime not working ... will have to be specific
-    @RolesAllowed({"admin", "user"})
-    @UserAccess(pathToUserName = "owner.email" , ignoreGroups = {"admin"})
-    public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
-        return em.find(Membership.class,id);
     }
 }

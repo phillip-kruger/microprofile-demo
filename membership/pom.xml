@@ -18,7 +18,7 @@
         <!-- payara-micro properties -->
         <debug.port>5006</debug.port>    
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
-        <payara-micro.version>5.181</payara-micro.version>
+        <payara-micro.version>5.182</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>
         <payara-micro.https.port>8443</payara-micro.https.port>
         <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>
@@ -42,7 +42,6 @@
     </dependencyManagement>
     
     <dependencies>
-        
         <!-- Database -->
         <dependency>
             <groupId>mysql</groupId>
@@ -72,6 +71,12 @@
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>jwt-user-ext</artifactId>
+        </dependency>
+        
+        <!-- Swagger UI -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>openapi-ext</artifactId>
         </dependency>
     </dependencies>
     

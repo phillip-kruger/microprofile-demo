@@ -26,9 +26,13 @@ public class ElasticsearchClientProducer {
         try {
             Settings settings = Settings.builder()
                 .put("cluster.name", clusterName).build();
-
+            
+            InetAddress inetAddress = InetAddress.getByName(hostName);
+            
+            TransportAddress transportAddress = new TransportAddress(inetAddress, hostPort);
+            
             return new PreBuiltTransportClient(settings)
-                    .addTransportAddress(new TransportAddress(InetAddress.getByName(hostName), hostPort));
+                    .addTransportAddress(transportAddress);
         } catch (UnknownHostException ex) {
             log.log(Level.SEVERE, null, ex);
             throw new ClientNotAvailableException(ex);
@@ -43,5 +47,4 @@ public class ElasticsearchClientProducer {
     
     @Inject @ConfigProperty(name = "elasticsearch.host.port", defaultValue = "9300")
     private int hostPort;
-    
 }

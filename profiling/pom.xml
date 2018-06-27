@@ -62,12 +62,23 @@
             <artifactId>jaxrs-ext</artifactId>
         </dependency>
         
+        <!-- JAX-RS Bean validation Mappers -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>beanval-ext</artifactId>
+        </dependency>
+        
         <!-- REST Client Exception Mappers -->
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
             <artifactId>restclient-ext</artifactId>
         </dependency>
         
+        <!-- Config Memory source -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>config-ext</artifactId>
+        </dependency>
         
     </dependencies>
     

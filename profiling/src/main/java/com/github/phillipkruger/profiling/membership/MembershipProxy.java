@@ -16,7 +16,6 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @Dependent
 @RegisterRestClient
-
 @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
 @RegisterProvider(RuntimeResponseExceptionMapper.class)
 @Path("/api")

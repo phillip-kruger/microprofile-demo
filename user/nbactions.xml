@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-start-server</actionName>
+            <displayName>start-server</displayName>
+            <goals>
+                <goal>liberty:start-server</goal>
+            </goals>
+        </action>
+    </actions>

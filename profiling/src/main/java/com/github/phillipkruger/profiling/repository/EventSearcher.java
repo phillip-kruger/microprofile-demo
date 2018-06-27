@@ -39,11 +39,9 @@ public class EventSearcher {
     
     private Response handleSearchResponse(SearchResponse response){
         int status = response.status().getStatus();
-        log.severe("status is " + status);
         if(status == 200){
             SearchHits hits = response.getHits();
             long numberOfHits = hits.totalHits;
-            log.severe("numberOfHits is " + numberOfHits);
             if(numberOfHits>0){
                 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
                 long took = response.getTook().getMillis();
