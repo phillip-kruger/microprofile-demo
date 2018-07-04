@@ -33,8 +33,8 @@ import org.eclipse.microprofile.openapi.annotations.servers.Server;
             @Server(url = "http://yellow:8080/membership",description = "Yellow Pi")        
         }
 )
-@SecurityScheme(description = "The JWT from User service",
-        ref = "Authorization", 
+@SecurityScheme(securitySchemeName = "Authorization",
+        description = "The JWT from User service",
         in = SecuritySchemeIn.HEADER, 
         type = SecuritySchemeType.HTTP, 
         scheme = "bearer", 

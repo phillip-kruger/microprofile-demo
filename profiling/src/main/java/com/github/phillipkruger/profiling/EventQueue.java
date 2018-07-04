@@ -35,7 +35,7 @@ public class EventQueue {
             queue.clear();
 
             for(UserEvent event:all){
-                eventLogger.logEvent(event);
+                //eventLogger.logEvent(event);
             }
         }
         

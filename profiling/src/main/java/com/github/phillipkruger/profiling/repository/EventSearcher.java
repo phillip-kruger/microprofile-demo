@@ -21,6 +21,8 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 
 @RequestScoped
 @Log
@@ -75,6 +77,7 @@ public class EventSearcher {
         SearchRequestBuilder srb = client.prepareSearch(IndexDetails.INDEX).setTypes(IndexDetails.TYPE);
         srb = srb.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
         srb = srb.setQuery(QueryBuilders.termQuery(key, value));
+        srb = srb.addSort(SortBuilders.fieldSort("timeOccured").order(SortOrder.DESC));
         srb = srb.setFrom(0).setSize(size);
         return srb;
     }

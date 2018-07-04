@@ -40,41 +40,31 @@ public class EventLogger {
     @Inject @Successful
     private Event<UserEvent> successfulBroadcaster;
     
-    @Inject @Failed
-    private Event<UserEvent> failedBroadcaster;
-    
     @Inject @RestClient
     private MembershipProxy membershipProxy;
     
-    @Inject
-    private JsonWebToken callerPrincipal;
+    //@Fallback(StringFallbackHandler.class)
     
     @Counted(name = "Events logged",absolute = true,monotonic = true)
     @Asynchronous
-    @Retry(abortOn = RuntimeException.class,delay = 30, delayUnit = ChronoUnit.SECONDS, maxRetries = 5)
-    //@Fallback(StringFallbackHandler.class)
-    public Future<Void> logEvent(@NotNull UserEvent event){
+    @Retry(delay = 10, delayUnit = ChronoUnit.SECONDS, maxRetries = 5)
+    public Future<Void> logEvent(String token, @NotNull UserEvent event){
+        log.severe(">>> Now (trying to )log event [" + event + "] ...");
+        JsonObject json = converter.toJsonObject(event);
+        int membershipId = json.getInt("userId");
         
-            
-            JsonObject json = converter.toJsonObject(event);
-            int membershipId = json.getInt("userId");
-            validateMembership(membershipId);
-            
-            try{
-                IndexResponse response = client.prepareIndex(IndexDetails.INDEX, IndexDetails.TYPE)
-                    .setSource(json.toString(), XContentType.JSON)
-                    .get();
+        validateMembership(token,membershipId);
+        
+        IndexResponse response = client.prepareIndex(IndexDetails.INDEX, IndexDetails.TYPE)
+            .setSource(json.toString(), XContentType.JSON)
+            .get();
 
-                RestStatus status = response.status();
-                
-                if(status.getStatus()==201){
-                    successfulBroadcaster.fire(event);
-                }else{
-                    failedBroadcaster.fire(event);
-                }
-            }catch(NoNodeAvailableException nnae){
-                failedBroadcaster.fire(event);
-            }
+        RestStatus status = response.status();
+
+        if(status.getStatus()==201){
+            successfulBroadcaster.fire(event);
+        }
+
         return CompletableFuture.completedFuture(null);
     }
     
@@ -82,8 +72,9 @@ public class EventLogger {
         log.log(Level.INFO, ">>>>>>>>> Received event [{0}]", userEvent);
     }
     
-    private void validateMembership(int membershipId) {
-        Membership membership = membershipProxy.getMembership("Bearer " + callerPrincipal.getRawToken(), membershipId);
+    
+    private void validateMembership(String token,int membershipId) {
+        Membership membership = membershipProxy.getMembership("Bearer " + token, membershipId);
         log.log(Level.FINEST, "Validate membership = [{0}]", membership);
     }
 }

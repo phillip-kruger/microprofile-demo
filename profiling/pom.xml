@@ -15,16 +15,16 @@
     <name>Microprofile Demo :: Profiling</name>
 
     <properties>
-        <!-- wildfly-swarm properties -->
+        <!-- thorntail properties -->
         <debug.port>5005</debug.port>
-        <wildfly-swarm.version>2018.6.0-SNAPSHOT</wildfly-swarm.version>
-        <wildfly-swarm.http.port>7080</wildfly-swarm.http.port>
-        <wildfly-swarm.https.port>7443</wildfly-swarm.https.port>
-        <wildfly-swarm.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}wildfly-swarm</wildfly-swarm.installDir>
-        <wildfly-swarm.deployDir>${wildfly-swarm.installDir}${file.separator}deployments</wildfly-swarm.deployDir>
-        <wildfly-swarm.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}wildfly-swarm${file.separator}config</wildfly-swarm.configDir>
-        <wildfly-swarm.logsDir>${wildfly-swarm.installDir}${file.separator}logs</wildfly-swarm.logsDir>
-        <wildfly-swarm.logfile>${wildfly-swarm.logsDir}${file.separator}server.log</wildfly-swarm.logfile>
+        <thorntail.version>2.0.0.Final</thorntail.version>
+        <thorntail.http.port>7080</thorntail.http.port>
+        <thorntail.https.port>7443</thorntail.https.port>
+        <thorntail.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}thorntail</thorntail.installDir>
+        <thorntail.deployDir>${thorntail.installDir}${file.separator}deployments</thorntail.deployDir>
+        <thorntail.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}thorntail${file.separator}config</thorntail.configDir>
+        <thorntail.logsDir>${thorntail.installDir}${file.separator}logs</thorntail.logsDir>
+        <thorntail.logfile>${thorntail.logsDir}${file.separator}server.log</thorntail.logfile>
         
         <es.version>6.2.4</es.version>
     </properties>
@@ -32,9 +32,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.wildfly.swarm</groupId>
+                <groupId>io.thorntail</groupId>
                 <artifactId>bom-all</artifactId>
-                <version>${wildfly-swarm.version}</version>
+                <version>${thorntail.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>    
@@ -80,45 +80,25 @@
             <artifactId>config-ext</artifactId>
         </dependency>
         
-        <!-- Zipkin -->
-<!--        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave-instrumentation-servlet</artifactId>
-        </dependency>-->
-<!--        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave-instrumentation-jaxrs2</artifactId>
-        </dependency>-->
-<!--        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave-instrumentation-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave-instrumentation-servlet</artifactId>
-        </dependency>-->
     </dependencies>
     
     <build>
         <plugins>
 
-            <!-- Wildfly swarm plugin -->
+            <!-- Thorntail plugin -->
             <plugin>
-                <groupId>org.wildfly.swarm</groupId>
-                <artifactId>wildfly-swarm-plugin</artifactId>
-                <version>${wildfly-swarm.version}</version>
+                
+                <groupId>io.thorntail</groupId>
+                <artifactId>thorntail-maven-plugin</artifactId>
+                <version>${thorntail.version}</version>
                 
                 <configuration>
                     <properties>
                         <swarm.context.path>/${project.artifactId}</swarm.context.path>
-                        <swarm.http.port>${wildfly-swarm.http.port}</swarm.http.port>
-                        <swarm.https.port>${wildfly-swarm.https.port}</swarm.https.port>
-                        <swarm.management.http.port>2${wildfly-swarm.http.port}</swarm.management.http.port> 
-                        <swarm.management.https.port>2${wildfly-swarm.https.port}</swarm.management.https.port>
+                        <swarm.http.port>${thorntail.http.port}</swarm.http.port>
+                        <swarm.https.port>${thorntail.https.port}</swarm.https.port>
+                        <swarm.management.http.port>2${thorntail.http.port}</swarm.management.http.port> 
+                        <swarm.management.https.port>2${thorntail.https.port}</swarm.management.https.port>
                     </properties>
                 </configuration>
                 <executions>
@@ -166,7 +146,7 @@
                                 <argument>-jar</argument>
                                 <argument>-Xdebug</argument>
                                 <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</argument>
-                                <argument>${project.build.directory}${file.separator}${project.artifactId}-swarm.jar</argument>
+                                <argument>${project.build.directory}${file.separator}${project.artifactId}-thorntail.jar</argument>
                                 
                             </arguments>
                             
@@ -201,7 +181,7 @@
                                 <configuration>
                                     <target>
                                         <!-- Copy the new version -->
-                                        <scp file="${project.build.directory}${file.separator}${project.artifactId}-swarm.jar" 
+                                        <scp file="${project.build.directory}${file.separator}${project.artifactId}-thorntail.jar" 
                                              todir="pi:${pi.password}@red:/home/pi/microprofile-demo/"
                                              trust="true"
                                         />

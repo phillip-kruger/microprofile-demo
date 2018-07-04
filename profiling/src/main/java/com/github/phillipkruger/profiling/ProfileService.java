@@ -27,13 +27,13 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.opentracing.Traced;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
+import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response.Status;
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -61,16 +61,22 @@ public class ProfileService {
     @Inject
     private JsonWebToken callerPrincipal;
     
-    //@Inject
-    //private io.opentracing.Tracer tracer;
-    
     @POST
     @Operation(description = "Getting all the events for a certain user")
-    @APIResponse(responseCode = "202", description = "Accepted the event, queued to be stored")
-    public Response logEvent(@NotNull @RequestBody(description = "Log a new event.",content = @Content(mediaType = MediaType.APPLICATION_JSON,schema = @Schema(implementation = UserEvent.class))) 
-                        UserEvent event){
+    @APIResponses({
+            @APIResponse(responseCode = "202", description = "Accepted the event, queued to be stored"),
+            @APIResponse(responseCode = "401", description = "User not authorized")
+    })
+    @SecurityRequirement(name = "Authorization")
+    @RolesAllowed({"admin","user"})
+    public Response logEvent(@NotNull @RequestBody(
+                                        description = "Log a new event.",
+                                        content = @Content(
+                                                    mediaType = MediaType.APPLICATION_JSON,
+                                                    schema = @Schema(implementation = UserEvent.class))) 
+                                UserEvent event){
         
-        eventLogger.logEvent(event);
+        eventLogger.logEvent(callerPrincipal.getRawToken(), event);
         
         return Response.accepted(event).build();
     }
@@ -82,11 +88,14 @@ public class ProfileService {
                     content = @Content(schema = @Schema(implementation = UserEvent.class))),
             @APIResponse(responseCode = "401", description = "User not authorized"),
             @APIResponse(responseCode = "412", description = "Membership not found, invalid userId",
+                    headers = @Header(name = REASON)),
+            @APIResponse(responseCode = "503", description = "Proplem with a connection to a downstream service",
                     headers = @Header(name = REASON))
     })
     @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
     @Traced(operationName = "GetUserEvents", value = true)
+    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
     public Response getUserEvents(
             @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") 
                 @PathParam("userId") int userId, 

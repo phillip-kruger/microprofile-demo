@@ -73,6 +73,12 @@
             <artifactId>jwt-user-ext</artifactId>
         </dependency>
         
+        <!-- Config Memory source -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <artifactId>config-ext</artifactId>
+        </dependency>
+        
         <!-- Swagger UI -->
         <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>

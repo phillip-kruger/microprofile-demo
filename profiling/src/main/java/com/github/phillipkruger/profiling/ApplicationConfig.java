@@ -33,7 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.servers.Server;
         }
 )
 @SecurityScheme(description = "The JWT from User service",
-        ref = "Authorization", 
+        securitySchemeName = "Authorization", 
         in = SecuritySchemeIn.HEADER, 
         type = SecuritySchemeType.HTTP, 
         scheme = "bearer", 

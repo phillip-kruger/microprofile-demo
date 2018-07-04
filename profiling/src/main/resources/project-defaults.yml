@@ -1,6 +1,6 @@
 swarm:
   bind:
-    address: localhost
+    address: 0.0.0.0
   microprofile:
     jwtauth:
       token:
@@ -24,3 +24,8 @@ swarm:
               module: org.wildfly.extension.undertow
               flag: required
               login-module-stack-ref: roles-lm-stack
+  management:
+    audit-access:
+      audit-log-logger:
+        enabled: false
+        log-boot: false
