@@ -1,7 +1,7 @@
 package com.github.phillipkruger.profiling.membership;
 
 import com.github.phillipkruger.microprofileextentions.restclient.RuntimeResponseExceptionMapper;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.RequestScoped;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,7 +14,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@Dependent
+@RequestScoped
 @RegisterRestClient
 @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
 @RegisterProvider(RuntimeResponseExceptionMapper.class)

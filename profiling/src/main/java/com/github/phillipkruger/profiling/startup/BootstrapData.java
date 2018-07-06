@@ -42,7 +42,7 @@ public class BootstrapData {
     
     private void logEvent(UserEvent event){
         try {
-            client.prepareIndex(IndexDetails.INDEX, IndexDetails.TYPE)
+            client.prepareIndex(IndexDetails.PROFILING_INDEX, IndexDetails.TYPE)
                 .setSource(userEventConverter.toJsonString(event), XContentType.JSON)
                 .get();
         }catch(NoNodeAvailableException nnae){

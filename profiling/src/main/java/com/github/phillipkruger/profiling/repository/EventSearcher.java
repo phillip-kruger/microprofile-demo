@@ -74,7 +74,7 @@ public class EventSearcher {
     }
     
     private SearchRequestBuilder getSearchRequestBuilder(String key,Object value,int size){
-        SearchRequestBuilder srb = client.prepareSearch(IndexDetails.INDEX).setTypes(IndexDetails.TYPE);
+        SearchRequestBuilder srb = client.prepareSearch(IndexDetails.PROFILING_INDEX).setTypes(IndexDetails.TYPE);
         srb = srb.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
         srb = srb.setQuery(QueryBuilders.termQuery(key, value));
         srb = srb.addSort(SortBuilders.fieldSort("timeOccured").order(SortOrder.DESC));

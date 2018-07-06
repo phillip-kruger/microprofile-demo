@@ -3,7 +3,6 @@ package com.github.phillipkruger.profiling.repository;
 import com.github.phillipkruger.profiling.UserEvent;
 import com.github.phillipkruger.profiling.UserEventConverter;
 import com.github.phillipkruger.profiling.eventstatus.Successful;
-import com.github.phillipkruger.profiling.eventstatus.Failed;
 import com.github.phillipkruger.profiling.membership.Membership;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
@@ -21,12 +20,11 @@ import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.transport.NoNodeAvailableException;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
-import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.faulttolerance.Fallback;
 
 @RequestScoped
 @Log
@@ -43,19 +41,18 @@ public class EventLogger {
     @Inject @RestClient
     private MembershipProxy membershipProxy;
     
-    //@Fallback(StringFallbackHandler.class)
-    
     @Counted(name = "Events logged",absolute = true,monotonic = true)
     @Asynchronous
     @Retry(delay = 10, delayUnit = ChronoUnit.SECONDS, maxRetries = 5)
+    @Fallback(EventLoggerFallbackHandler.class)
     public Future<Void> logEvent(String token, @NotNull UserEvent event){
-        log.severe(">>> Now (trying to )log event [" + event + "] ...");
+        log.log(Level.SEVERE, ">>> Now (trying to )log event [{0}] ...", event);
         JsonObject json = converter.toJsonObject(event);
         int membershipId = json.getInt("userId");
         
         validateMembership(token,membershipId);
         
-        IndexResponse response = client.prepareIndex(IndexDetails.INDEX, IndexDetails.TYPE)
+        IndexResponse response = client.prepareIndex(IndexDetails.PROFILING_INDEX, IndexDetails.TYPE)
             .setSource(json.toString(), XContentType.JSON)
             .get();
 
