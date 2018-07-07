@@ -20,15 +20,12 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
-import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 
 /**
  * Token Service. JAX-RS
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  * @see https://docs.payara.fish/documentation/microprofile/jwt.html
  * @see https://github.com/javaee-samples/microprofile1.2-samples/tree/master/jwt-auth
- * TODO: Add Metrics
  */
 @Log
 @RequestScoped
@@ -70,6 +67,4 @@ public class TokenService {
                 .collect(Collectors.toList());
     }                
                 
-}
-
-//    @Counted(name = "Tokens issued", absolute = true, monotonic = true)
+}  

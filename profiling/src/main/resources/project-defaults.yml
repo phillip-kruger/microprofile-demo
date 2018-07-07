@@ -29,3 +29,12 @@ swarm:
       audit-log-logger:
         enabled: false
         log-boot: false
+        
+        
+  hystrix:
+    command:
+      default:
+        fallback:
+          isolation:
+            semaphore:
+              maxConcurrentRequests: 100

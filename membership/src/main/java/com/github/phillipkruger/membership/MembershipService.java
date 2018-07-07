@@ -22,6 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.java.Log;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.faulttolerance.Bulkhead;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.metrics.MetricUnits;
@@ -88,7 +89,9 @@ public class MembershipService {
     @Counted(name = "Membership requests",absolute = true,monotonic = true)
     @Operation(description = "Get a certain Membership by id")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfull, returning membership", content = @Content(mediaType = MediaType.APPLICATION_JSON,schema = @Schema(implementation = Membership.class))),
+            @APIResponse(responseCode = "200", description = "Successfull, returning membership", 
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = Membership.class))),
             @APIResponse(responseCode = "504", description = "Service timed out"),
             @APIResponse(responseCode = "401", description = "User not authorized")
     })
@@ -96,8 +99,10 @@ public class MembershipService {
     @RolesAllowed({"admin","user"})
     @UserAccess(pathToUserName = "owner.email" , ignoreGroups = {"admin"})
     @Traced(operationName = "GetMembershipById", value = true)
+    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, 
+            delay = 10, delayUnit = ChronoUnit.SECONDS ) 
     @Timeout(value = 3 , unit = ChronoUnit.SECONDS)
-    //@CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS ) 
+    @Bulkhead(2)
     public Membership getMembership(@NotNull @PathParam(value = "id") int id) {
         // Some bad code went into production...
         if(activateBadCode){

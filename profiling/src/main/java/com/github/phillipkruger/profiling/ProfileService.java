@@ -37,6 +37,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+import org.elasticsearch.client.transport.NoNodeAvailableException;
 
 /**
  * Profiling Service. JAX-RS
@@ -95,12 +96,15 @@ public class ProfileService {
     @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
     @Traced(operationName = "GetUserEvents", value = true)
-    @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
+    @CircuitBreaker(failOn = NoNodeAvailableException.class,requestVolumeThreshold = 1, 
+            failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
     public Response getUserEvents(
-            @Parameter(name = "userId", description = "The User Id of the member", required = true, allowEmptyValue = false, example = "1") 
-                @PathParam("userId") int userId, 
-            @Parameter(name = "size", description = SIZE_DESC, required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") 
-                @QueryParam("size") int size){
+            @Parameter(name = "userId", description = "The User Id of the member", 
+                    required = true, allowEmptyValue = false, example = "1") 
+                    @PathParam("userId") int userId, 
+            @Parameter(name = "size", description = SIZE_DESC, 
+                    required = false, allowEmptyValue = true, example = "10") @DefaultValue("-1") 
+                    @QueryParam("size") int size){
         
         try {
             validateMembership(userId);
