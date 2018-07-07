@@ -1,5 +1,9 @@
 # Microprofile demo
 
+See the presentation slides here:
+
+http://bit.ly/mp-presentation
+
 Applications to demonstrate MicroProfile 
 
 ## Health 1.0 API
