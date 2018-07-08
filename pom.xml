@@ -69,7 +69,7 @@
         <log.name>com.github.phillipkruger</log.name>
         
         <!-- Password to scp to Raspberry Pi -->
-        <pi.password>Q!w2e3r4</pi.password>
+        <pi.password>legoland</pi.password>
     </properties>
     
     

@@ -34,6 +34,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -70,6 +71,7 @@ public class ProfileService {
     })
     @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
+    @Counted(name = "User events created",absolute = true,monotonic = true)
     public Response logEvent(@NotNull @RequestBody(
                                         description = "Log a new event.",
                                         content = @Content(
@@ -98,6 +100,7 @@ public class ProfileService {
     @Traced(operationName = "GetUserEvents", value = true)
     @CircuitBreaker(failOn = NoNodeAvailableException.class,requestVolumeThreshold = 1, 
             failureRatio=1, delay = 10, delayUnit = ChronoUnit.SECONDS )
+    @Counted(name = "User events requests",absolute = true,monotonic = true)
     public Response getUserEvents(
             @Parameter(name = "userId", description = "The User Id of the member", 
                     required = true, allowEmptyValue = false, example = "1") 

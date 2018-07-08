@@ -14,16 +14,21 @@
 
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true" />
-
+    
     <keyStore id="defaultKeyStore" password="0p3nL1b3ry"/>
-
+    
     <basicRegistry id="basic" realm="WebRealm">
+        <user name="admin" password="{xor}PjsyNjEvKDs="/> <!-- adminpwd -->
         <user name="phillip.kruger@gmail.com" password="{xor}Lzc2MzM2Ly8oOw==" />  <!-- phillippwd -->
         <user name="charmaine.kruger@gmail.com" password="{xor}PDc+LTI+NjE6Lyg7" />  <!-- charmainepwd -->
         <user name="koos@gmail.com" password="{xor}NDAwLC8oOw==" />   <!-- koospwd -->
         <user name="minki@gmail.com" password="{xor}MjYxNDYvKDs=" />   <!-- minkipwd -->
 
-        <group name="admin">
+        <group name="Administrator">
+            <member name="admin" />
+        </group>
+        
+        <group name="admin">    
             <member name="phillip.kruger@gmail.com" />
         </group>
 
@@ -34,6 +39,10 @@
             <member name="minki@gmail.com" />
         </group>
     </basicRegistry>
+    
+    <administrator-role>
+        <user>admin</user>
+    </administrator-role>
     
     <application location="${project.build.finalName}.war" type="war" id="${project.build.finalName}"
                  name="${project.build.finalName}" context-root="/${project.build.finalName}">
