@@ -1,30 +1,23 @@
 # Microprofile demo
 
-See the presentation slides here:
+![logo](https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/microprofile-logo.png)
 
-http://bit.ly/mp-presentation
+## Presentation
 
-Applications to demonstrate MicroProfile 
+See the presentation [Google Slides](http://bit.ly/mp-presentation)
 
-## Health 1.0 API
+## Sample
 
-[Spec](https://github.com/eclipse/microprofile-health/releases/tag/1.0)
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/sample.gif" alt="sample" width="100%"/>
 
-## Metrics 1.1 API
-[Spec](https://github.com/eclipse/microprofile-metrics/releases/tag/1.1)
+## Implementations
 
-## Prometheus and Grafana
+The demo runs on
 
-Configure in :
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/wildfly-swarm.png" alt="wildfly-swarm" width="200px"/>
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/payara.png" alt="payara" width="200px"/>
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/openliberty.png" alt="openliberty" width="200px"/>
 
-    /etc/prometheus/prometheus.yml
+## Dependencies
 
-Start as system control process:
-
-    sudo systemctl start prometheus.service
-    sudo systemctl start grafana.service
-
-View consoles:
-
-* [prometheus](http://localhost:9090/)
-* [grafana](http://localhost:3000/)
+This demo use [microprofile-extentions](https://github.com/phillip-kruger/microprofile-extentions) extensively.
