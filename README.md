@@ -15,7 +15,7 @@ See the presentation [Google Slides](http://bit.ly/mp-presentation)
 The demo runs on
 
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/wildfly-swarm.png" alt="wildfly-swarm" width="200px"/>
-<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/payara.png" alt="payara" width="200px"/>
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/payara.jpeg" alt="payara" width="200px"/>
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/openliberty.png" alt="openliberty" width="200px"/>
 
 ## Dependencies
