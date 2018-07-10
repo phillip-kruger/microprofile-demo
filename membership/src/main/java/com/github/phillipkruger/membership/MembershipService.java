@@ -132,7 +132,8 @@ public class MembershipService {
     @DELETE 
     @Path("{id}")
     @Counted(name = "Membership deleted",absolute = true,monotonic = true)
-    @RolesAllowed({"admin"})
+    @RolesAllowed({"admin","user"})
+    @SecurityRequirement(name = "Authorization")
     public Membership deleteMembership(@NotNull @PathParam(value = "id") int id){
         Membership membership = em.find(Membership.class,id);
         if(membership!=null){
