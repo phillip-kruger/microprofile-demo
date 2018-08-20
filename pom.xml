@@ -60,7 +60,7 @@
         <microProfile.version>1.3</microProfile.version>
         <lombok.version>1.18.0</lombok.version>
         <!--<brave.version>5.1.0</brave.version>-->
-        <microProfile.ext.version>1.0.6</microProfile.ext.version>
+        <microProfile.ext.version>1.0.10-SNAPSHOT</microProfile.ext.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        
@@ -108,42 +108,42 @@
             
             <!-- MicroProfile ext -->
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>health-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>openapi-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>jaxrs-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>beanval-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>restclient-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>jwt-user-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>jwt-issuer-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>config-ext</artifactId>
                 <version>${microProfile.ext.version}</version>
             </dependency>

@@ -39,7 +39,7 @@
         </dependency>
         <!-- JAX-RS Exception Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>jaxrs-ext</artifactId>
         </dependency>
     

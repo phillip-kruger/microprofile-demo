@@ -52,31 +52,31 @@
 
         <!-- Swagger UI -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>openapi-ext</artifactId>
         </dependency>
         
         <!-- JAX-RS Exception Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>jaxrs-ext</artifactId>
         </dependency>
         
         <!-- JAX-RS Bean validation Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>beanval-ext</artifactId>
         </dependency>
         
         <!-- REST Client Exception Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>restclient-ext</artifactId>
         </dependency>
         
         <!-- Config Memory source -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>config-ext</artifactId>
         </dependency>
         

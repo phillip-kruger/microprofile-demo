@@ -51,37 +51,37 @@
         
         <!-- Microprofile Health ext -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>health-ext</artifactId>
         </dependency>
         
         <!-- JAX-RS Runtime Exception Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>jaxrs-ext</artifactId>
         </dependency>
         
         <!-- JAX-RS Bean validation Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>beanval-ext</artifactId>
         </dependency>
         
         <!-- JWT ext -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>jwt-user-ext</artifactId>
         </dependency>
         
         <!-- Config Memory source -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>config-ext</artifactId>
         </dependency>
         
         <!-- Swagger UI -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extentions</groupId>
+            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>openapi-ext</artifactId>
         </dependency>
     </dependencies>
