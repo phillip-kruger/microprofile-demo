@@ -74,16 +74,16 @@
         </dependency>
         
         <!-- Config Memory source -->
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>config-ext</artifactId>
-        </dependency>
+        </dependency>-->
         
         <!-- Swagger UI -->
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>openapi-ext</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
     
     

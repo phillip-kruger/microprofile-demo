@@ -21,3 +21,37 @@ The demo runs on
 ## Dependencies
 
 This demo use [microprofile-extentions](https://github.com/phillip-kruger/microprofile-extentions) extensively.
+
+## Getting started.
+
+### Prerequisite
+You need a MySQL/Maria DB and Elasticsearch servers installed and running on your PC.
+
+So something like this:
+
+    sudo systemctl start mariadb.service
+    sudo systemctl start elasticsearch.service
+
+### Source code
+The then demo code on your PC:
+
+    git clone https://github.com/phillip-kruger/microprofile-demo.git
+    cd microprofile-demo
+    mvn clean install
+
+### Running
+Build and start **Membership service**
+
+    cd membership/
+    mvn clean install -Ppayara-micro-run
+
+Build and start **Profiling service**
+
+    cd profiling/
+    mvn clean install -Prun
+
+Build and start **User service**
+
+    cd user/
+    mvn clean install -Prun
+
