@@ -18,24 +18,24 @@
         <!-- Open Liberty properties -->
         <log.name>com.github.phillipkruger.user</log.name>
         <log.level>FINEST</log.level>
-        <debug.port>5007</debug.port>    
         <openliberty.version>18.0.0.2</openliberty.version>
         <openliberty.http.port>9080</openliberty.http.port>
         <openliberty.https.port>9443</openliberty.https.port>
         <openliberty.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}openliberty</openliberty.installDir>
         <openliberty.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}openliberty${file.separator}config</openliberty.configDir>
         <openliberty.logsDir>${openliberty.installDir}${file.separator}wlp${file.separator}usr${file.separator}servers${file.separator}defaultServer${file.separator}logs</openliberty.logsDir>
-        <openliberty.maven.version>2.4.2</openliberty.maven.version>
+        <openliberty.maven.version>2.6</openliberty.maven.version>
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
     </properties>
     
     <dependencies>
+        
         <!-- To generate the JWT token -->
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>5.12</version>
+            <version>6.0.2</version>
         </dependency>
         <!-- JAX-RS Exception Mappers -->
         <dependency>
@@ -173,8 +173,6 @@
                                     <jvmOptions>
                                         <param>-Xms${openliberty.Xms}</param>
                                         <param>-Xmx${openliberty.Xmx}</param>
-                                        <param>-Xdebug</param>
-                                        <param>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</param>
                                     </jvmOptions>
                                 </configuration>
                             </execution>

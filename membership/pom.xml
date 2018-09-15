@@ -16,9 +16,8 @@
     
     <properties>
         <!-- payara-micro properties -->
-        <debug.port>5006</debug.port>    
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
-        <payara-micro.version>5.182</payara-micro.version>
+        <payara-micro.version>5.183</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>
         <payara-micro.https.port>8443</payara-micro.https.port>
         <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>
@@ -27,7 +26,7 @@
         <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
-        <mysql.version>8.0.11</mysql.version>
+        <mysql.version>8.0.12</mysql.version>
     </properties>
     
     <dependencyManagement>
@@ -42,6 +41,13 @@
     </dependencyManagement>
     
     <dependencies>
+        <!-- Payara -->
+        <dependency>
+            <groupId>fish.payara.extras</groupId>
+            <artifactId>payara-micro</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
         <!-- Database -->
         <dependency>
             <groupId>mysql</groupId>
@@ -73,17 +79,17 @@
             <artifactId>jwt-user-ext</artifactId>
         </dependency>
         
-        <!-- Config Memory source -->
-<!--        <dependency>
+        <!--Config Memory source--> 
+        <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>config-ext</artifactId>
-        </dependency>-->
+        </dependency>
         
         <!-- Swagger UI -->
-<!--        <dependency>
+        <dependency>
             <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
             <artifactId>openapi-ext</artifactId>
-        </dependency>-->
+        </dependency>
     </dependencies>
     
     

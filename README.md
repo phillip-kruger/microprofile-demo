@@ -4,7 +4,7 @@
 
 ## Presentation
 
-See the presentation [Google Slides](http://bit.ly/mp-presentation)
+See the presentation [Google Slides](http://bit.ly/mp-presentation), and the [talk](https://www.youtube.com/watch?v=aSEPxDPc-ag)
 
 ## Sample
 
@@ -26,11 +26,23 @@ This demo use [microprofile-extentions](https://github.com/phillip-kruger/microp
 
 ### Prerequisite
 You need a MySQL/Maria DB and Elasticsearch servers installed and running on your PC.
+To test the Metrics you need Prometheus and Grafana
 
 So something like this:
 
     sudo systemctl start mariadb.service
     sudo systemctl start elasticsearch.service
+
+and:
+
+    sudo systemctl start prometheus.service
+    sudo systemctl start grafana.service
+
+Also make sure **prometheus** is configured in 
+
+    /etc/prometheus/prometheus.yml
+
+(look at [prometheus.yml](prometheus.yml) as an example. You can also use the [grafana.json](grafana.json) for the grafana dashboards)
 
 ### Source code
 The then demo code on your PC:
@@ -55,3 +67,4 @@ Build and start **User service**
     cd user/
     mvn clean install -Prun
 
+Opening up the ```index.html``` in ```static/public_html``` will give you the demo screen

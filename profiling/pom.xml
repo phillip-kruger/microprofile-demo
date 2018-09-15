@@ -16,8 +16,7 @@
 
     <properties>
         <!-- thorntail properties -->
-        <debug.port>5005</debug.port>
-        <thorntail.version>2.0.0.Final</thorntail.version>
+        <thorntail.version>2.2.0.Final</thorntail.version>
         <thorntail.http.port>7080</thorntail.http.port>
         <thorntail.https.port>7443</thorntail.https.port>
         <thorntail.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}thorntail</thorntail.installDir>
@@ -26,7 +25,7 @@
         <thorntail.logsDir>${thorntail.installDir}${file.separator}logs</thorntail.logsDir>
         <thorntail.logfile>${thorntail.logsDir}${file.separator}server.log</thorntail.logfile>
         
-        <es.version>6.2.4</es.version>
+        <es.version>6.4.0</es.version>
     </properties>
     
     <dependencyManagement>
@@ -144,10 +143,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <argument>-jar</argument>
-                                <argument>-Xdebug</argument>
-                                <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}</argument>
                                 <argument>${project.build.directory}${file.separator}${project.artifactId}-thorntail.jar</argument>
-                                
                             </arguments>
                             
                         </configuration>

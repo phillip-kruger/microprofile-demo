@@ -1,6 +1,6 @@
 package com.github.phillipkruger.profiling.health;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import lombok.extern.java.Log;
 import org.eclipse.microprofile.health.Health;
@@ -14,12 +14,12 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.cluster.health.ClusterHealthStatus;
 
 /**
- * Simple health check that test that the graphDB is available.
+ * Simple health check that test that the elasticsearch server is available.
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
  */
 @Log
 @Health
-@RequestScoped
+@ApplicationScoped
 public class ProfilingHealthCheck implements HealthCheck {
     
     @Inject
