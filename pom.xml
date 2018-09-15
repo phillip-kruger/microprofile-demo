@@ -59,7 +59,7 @@
         <javaee.version>8.0</javaee.version>
         <microProfile.version>1.4</microProfile.version>
         <lombok.version>1.18.2</lombok.version>
-        <microProfile.ext.version>1.0.10-SNAPSHOT</microProfile.ext.version>
+        <microProfile.ext.version>1.0.10</microProfile.ext.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        

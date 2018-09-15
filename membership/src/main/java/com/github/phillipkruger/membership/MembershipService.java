@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -55,6 +56,9 @@ public class MembershipService {
     // To activate: curl -X PUT "http://localhost:8080/membership/api/config/key/activateBadCode" -H  "accept: */*" -H  "Content-Type: text/plain" -d "true"
     @Inject @ConfigProperty(name = "activateBadCode",defaultValue = "false")
     private boolean activateBadCode;
+    
+    @Inject
+    private Event<Membership> broadcaster;
     
     @GET
     @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
@@ -126,6 +130,9 @@ public class MembershipService {
             Membership membership){
         membership = em.merge(membership);
         log.log(Level.INFO, "Created membership [{0}]", membership);
+        
+        broadcaster.fireAsync(membership);
+        
         return membership;    
     }
     
