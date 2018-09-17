@@ -118,7 +118,9 @@ public class MembershipService {
             }
         }
         
-        return em.find(Membership.class,id);
+        Membership membership = em.find(Membership.class,id);
+        broadcaster.fireAsync(membership);
+        return membership;
     }
 
     @POST
