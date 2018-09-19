@@ -81,9 +81,10 @@
         
         <!--Config Memory source--> 
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>config-ext</artifactId>
+            <groupId>org.microprofile-ext.config-ext</groupId>
+            <artifactId>configsource-memory</artifactId>
         </dependency>
+        
         
         <!-- Swagger UI -->
         <dependency>
