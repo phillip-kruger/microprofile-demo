@@ -63,6 +63,7 @@
         
         <!-- Microprofile extensions -->
         <configsource-memory.version>1.0.1</configsource-memory.version>
+        <swagger-ui.version>1.0.0</swagger-ui.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        
@@ -97,17 +98,17 @@
                 <version>${lombok.version}</version>
             </dependency>
             
-            <!-- MicroProfile ext -->
+            <!-- Old MicroProfile ext -->
             <dependency>
                 <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>health-ext</artifactId>
                 <version>${old.microProfile.ext.version}</version>
             </dependency>
-            <dependency>
+<!--            <dependency>
                 <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>openapi-ext</artifactId>
                 <version>${old.microProfile.ext.version}</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>jaxrs-ext</artifactId>
@@ -133,10 +134,17 @@
                 <artifactId>jwt-issuer-ext</artifactId>
                 <version>${old.microProfile.ext.version}</version>
             </dependency>
+            
+            <!-- Microprofile extensions -->
             <dependency>
                 <groupId>org.microprofile-ext.config-ext</groupId>
                 <artifactId>configsource-memory</artifactId>
                 <version>${configsource-memory.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.openapi-ext</groupId>
+                <artifactId>swagger-ui</artifactId>
+                <version>${swagger-ui.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

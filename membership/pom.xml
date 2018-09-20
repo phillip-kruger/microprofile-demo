@@ -85,11 +85,10 @@
             <artifactId>configsource-memory</artifactId>
         </dependency>
         
-        
         <!-- Swagger UI -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>openapi-ext</artifactId>
+            <groupId>org.microprofile-ext.openapi-ext</groupId>
+            <artifactId>swagger-ui</artifactId>
         </dependency>
     </dependencies>
     

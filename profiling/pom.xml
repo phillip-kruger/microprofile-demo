@@ -51,8 +51,8 @@
 
         <!-- Swagger UI -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>openapi-ext</artifactId>
+            <groupId>org.microprofile-ext.openapi-ext</groupId>
+            <artifactId>swagger-ui</artifactId>
         </dependency>
         
         <!-- JAX-RS Exception Mappers -->
