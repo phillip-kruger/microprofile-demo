@@ -20,7 +20,7 @@ The demo runs on
 
 ## Dependencies
 
-This demo use [microprofile-extentions](https://github.com/phillip-kruger/microprofile-extentions) extensively.
+This demo use [microprofile-extentions](https://github.com/microprofile-extensions) extensively.
 
 ## Getting started.
 

@@ -63,7 +63,12 @@
         
         <!-- Microprofile extensions -->
         <configsource-memory.version>1.0.1</configsource-memory.version>
-        <swagger-ui.version>1.0.0</swagger-ui.version>
+        <swagger-ui.version>1.0.1</swagger-ui.version>
+        <healthprobe-system.version>1.0.1</healthprobe-system.version>
+        <healthprobe-jvm.version>1.0.1</healthprobe-jvm.version>
+        <health-ui.version>1.0.2</health-ui.version>
+        <configurable-exception-handler.version>1.0.0</configurable-exception-handler.version>
+        <beanvalidation-exception-handler.version>1.0.0</beanvalidation-exception-handler.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        
@@ -97,28 +102,7 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
-            
-            <!-- Old MicroProfile ext -->
-            <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-                <artifactId>health-ext</artifactId>
-                <version>${old.microProfile.ext.version}</version>
-            </dependency>
-<!--            <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-                <artifactId>openapi-ext</artifactId>
-                <version>${old.microProfile.ext.version}</version>
-            </dependency>-->
-            <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-                <artifactId>jaxrs-ext</artifactId>
-                <version>${old.microProfile.ext.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-                <artifactId>beanval-ext</artifactId>
-                <version>${old.microProfile.ext.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>restclient-ext</artifactId>
@@ -146,6 +130,32 @@
                 <artifactId>swagger-ui</artifactId>
                 <version>${swagger-ui.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.health-ext</groupId>
+                <artifactId>healthprobe-system</artifactId>
+                <version>${healthprobe-system.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.health-ext</groupId>
+                <artifactId>healthprobe-jvm</artifactId>
+                <version>${healthprobe-jvm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.health-ext</groupId>
+                <artifactId>health-ui</artifactId>
+                <version>${health-ui.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.jaxrs-ext</groupId>
+                <artifactId>configurable-exception-handler</artifactId>
+                <version>${configurable-exception-handler.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.jaxrs-ext</groupId>
+                <artifactId>beanvalidation-exception-handler</artifactId>
+                <version>${beanvalidation-exception-handler.version}</version>
+            </dependency>
+            
         </dependencies>
     </dependencyManagement>
     

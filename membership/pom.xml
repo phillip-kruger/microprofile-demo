@@ -57,20 +57,31 @@
         
         <!-- Microprofile Health ext -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>health-ext</artifactId>
+            <groupId>org.microprofile-ext.health-ext</groupId>
+            <artifactId>healthprobe-system</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.microprofile-ext.health-ext</groupId>
+            <artifactId>healthprobe-jvm</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.microprofile-ext.health-ext</groupId>
+            <artifactId>health-ui</artifactId>
+            <scope>runtime</scope>
         </dependency>
         
-        <!-- JAX-RS Runtime Exception Mappers -->
+        <!-- JAX-RS Exception handlers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>jaxrs-ext</artifactId>
+            <groupId>org.microprofile-ext.jaxrs-ext</groupId>
+            <artifactId>configurable-exception-handler</artifactId>
+            <scope>runtime</scope>   
         </dependency>
-        
-        <!-- JAX-RS Bean validation Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>beanval-ext</artifactId>
+            <groupId>org.microprofile-ext.jaxrs-ext</groupId>
+            <artifactId>beanvalidation-exception-handler</artifactId>
+            <scope>runtime</scope>
         </dependency>
         
         <!-- JWT ext -->
@@ -83,12 +94,14 @@
         <dependency>
             <groupId>org.microprofile-ext.config-ext</groupId>
             <artifactId>configsource-memory</artifactId>
+            <scope>runtime</scope>
         </dependency>
         
         <!-- Swagger UI -->
         <dependency>
             <groupId>org.microprofile-ext.openapi-ext</groupId>
             <artifactId>swagger-ui</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     

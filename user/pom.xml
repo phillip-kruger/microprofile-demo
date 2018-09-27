@@ -18,7 +18,7 @@
         <!-- Open Liberty properties -->
         <log.name>com.github.phillipkruger.user</log.name>
         <log.level>FINEST</log.level>
-        <openliberty.version>18.0.0.2</openliberty.version>
+        <openliberty.version>18.0.0.3</openliberty.version>
         <openliberty.http.port>9080</openliberty.http.port>
         <openliberty.https.port>9443</openliberty.https.port>
         <openliberty.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}openliberty</openliberty.installDir>
@@ -27,6 +27,8 @@
         <openliberty.maven.version>2.6</openliberty.maven.version>
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
+        
+        <nimbus-jose-jwt.version>6.0.2</nimbus-jose-jwt.version>
     </properties>
     
     <dependencies>
@@ -35,12 +37,18 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>6.0.2</version>
+            <version>${nimbus-jose-jwt.version}</version>
         </dependency>
         <!-- JAX-RS Exception Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>jaxrs-ext</artifactId>
+            <groupId>org.microprofile-ext.jaxrs-ext</groupId>
+            <artifactId>configurable-exception-handler</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.microprofile-ext.jaxrs-ext</groupId>
+            <artifactId>beanvalidation-exception-handler</artifactId>
+            <scope>runtime</scope>
         </dependency>
     
     </dependencies>
