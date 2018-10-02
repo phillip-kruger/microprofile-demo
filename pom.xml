@@ -69,6 +69,7 @@
         <health-ui.version>1.0.2</health-ui.version>
         <configurable-exception-handler.version>1.0.0</configurable-exception-handler.version>
         <beanvalidation-exception-handler.version>1.0.0</beanvalidation-exception-handler.version>
+        <configurable-errorresponse-handler.version>1.0.0</configurable-errorresponse-handler.version>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
        
@@ -103,11 +104,6 @@
                 <version>${lombok.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-                <artifactId>restclient-ext</artifactId>
-                <version>${old.microProfile.ext.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
                 <artifactId>jwt-user-ext</artifactId>
@@ -155,7 +151,11 @@
                 <artifactId>beanvalidation-exception-handler</artifactId>
                 <version>${beanvalidation-exception-handler.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>org.microprofile-ext.restclient-ext</groupId>
+                <artifactId>configurable-errorresponse-handler</artifactId>
+                <version>${configurable-errorresponse-handler.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     

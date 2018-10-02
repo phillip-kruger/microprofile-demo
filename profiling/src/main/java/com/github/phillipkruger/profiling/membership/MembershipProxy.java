@@ -1,6 +1,5 @@
 package com.github.phillipkruger.profiling.membership;
 
-import com.github.phillipkruger.microprofileextentions.restclient.RuntimeResponseExceptionMapper;
 import javax.enterprise.context.RequestScoped;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -13,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import org.microprofileext.restclient.errorresponsehandler.RuntimeResponseExceptionMapper;
 
 @RequestScoped
 @RegisterRestClient
@@ -23,5 +23,5 @@ public interface MembershipProxy {
 
     @GET @Path("/{id}") @Operation(hidden = true)
     public Membership getMembership(@HeaderParam("Authorization") String authorization, @NotNull @PathParam(value = "id") int id);
- }
+}
 

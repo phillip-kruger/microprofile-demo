@@ -70,8 +70,8 @@
         
         <!-- REST Client Exception Mappers -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>restclient-ext</artifactId>
+            <groupId>org.microprofile-ext.restclient-ext</groupId>
+            <artifactId>configurable-errorresponse-handler</artifactId>
         </dependency>
         
         <!-- Config Memory source -->
