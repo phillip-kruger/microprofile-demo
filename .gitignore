@@ -25,3 +25,8 @@ hs_err_pid*
 /user/target/
 /token/target/
 /static/nbproject/private/
+
+# Intellij Idea
+.idea
+*.iml
+
