@@ -64,8 +64,8 @@
         <!-- Microprofile extensions -->
         <configsource-memory.version>1.0.1</configsource-memory.version>
         <swagger-ui.version>1.0.1</swagger-ui.version>
-        <healthprobe-system.version>1.0.1</healthprobe-system.version>
-        <healthprobe-jvm.version>1.0.1</healthprobe-jvm.version>
+        <healthprobe-system.version>1.0.3</healthprobe-system.version>
+        <healthprobe-jvm.version>1.0.3</healthprobe-jvm.version>
         <health-ui.version>1.0.3</health-ui.version>
         <configurable-exception-handler.version>1.0.0</configurable-exception-handler.version>
         <beanvalidation-exception-handler.version>1.0.0</beanvalidation-exception-handler.version>
