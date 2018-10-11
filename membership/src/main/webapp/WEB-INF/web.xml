@@ -12,9 +12,7 @@
     <data-source>
         <name>java:global/membership/MembershipDS</name>
         <class-name>com.mysql.cj.jdbc.MysqlXADataSource</class-name>
-        <server-name>localhost</server-name>
-        <port-number>3306</port-number>
-        <database-name>membership</database-name>
+        <url>jdbc:mysql://localhost/membership?useLegacyDatetimeCode=false&amp;serverTimezone=America/New_York</url>
         <user>payara</user>
         <password>payara</password>
         <transactional>true</transactional>
