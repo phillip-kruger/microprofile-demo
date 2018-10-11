@@ -16,7 +16,7 @@
         <port-number>3306</port-number>
         <database-name>membership</database-name>
         <user>payara</user>
-        <password>p@y@r@123</password>
+        <password>payara</password>
         <transactional>true</transactional>
     </data-source>
     

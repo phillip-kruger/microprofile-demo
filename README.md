@@ -37,7 +37,7 @@ You need to create a DB and DB User in Maria:
 
     mysql -u root -p
     MariaDB> CREATE DATABASE membership;
-    MariaDB> CREATE USER 'payara'@'localhost' IDENTIFIED BY 'p@y@r@123';
+    MariaDB> CREATE USER 'payara'@'localhost' IDENTIFIED BY 'payara';
     MariaDB> GRANT ALL PRIVILEGES ON membership.* TO 'payara'@'localhost';
     MariaDB> FLUSH PRIVILEGES;
     MariaDB> quit
