@@ -1,5 +1,6 @@
+DROP USER 'membershipuser'@'localhost';
+DROP DATABASE IF EXISTS membership;
 CREATE DATABASE membership;
-CREATE USER 'payara'@'localhost' IDENTIFIED BY 'payara';
-GRANT ALL PRIVILEGES ON membership.* TO 'payara'@'localhost';
+CREATE USER 'membershipuser'@'localhost' IDENTIFIED BY 'membershipuser';
+GRANT ALL PRIVILEGES ON membership.* TO 'membershipuser'@'localhost';
 FLUSH PRIVILEGES;
-

@@ -6,15 +6,13 @@
 
 See the presentation [Google Slides](http://bit.ly/mp-presentation), and the [talk](https://www.youtube.com/watch?v=aSEPxDPc-ag)
 
-## Sample
 
-<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/sample.gif" alt="sample" width="100%"/>
 
 ## Implementations
 
 The demo runs on
 
-<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/wildfly-swarm.png" alt="wildfly-swarm" width="200px"/>
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/thorntail.jpg" alt="thorntail" width="200px"/>
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/payara.jpeg" alt="payara" width="200px"/>
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/openliberty.png" alt="openliberty" width="200px"/>
 
@@ -22,23 +20,44 @@ The demo runs on
 
 This demo use [microprofile-extentions](https://github.com/microprofile-extensions) extensively.
 
+## High level use case
+
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/high_level.png" alt="highlevel" width="100%"/>
+
 ## Getting started.
 
 ### Prerequisite
-You need a MySQL/Maria DB and Elasticsearch servers installed and running on your PC.
-To test the Metrics you need Prometheus and Grafana
+
+#### MySQL / Maria
+
+You need a MySQL/Maria Database installed and running on your PC.
+
+So something like this:
+    
+    sudo pacman -S mariadb
+    sudo systemctl start mariadb.service
+
+You need to create a Database and Database User in Maria:
+
+    mysql -u root -p < membership/init.sql
+
+#### Elasticsearch
+
+You need Elasticsearch server installed and running on your PC.
 
 So something like this:
 
-    sudo systemctl start mariadb.service
+    sudo pacman -S elasticsearch
     sudo systemctl start elasticsearch.service
 
-You need to create a DB and DB User in Maria:
+#### Prometheus and Grafana
 
-    mysql -u root < membership/init.sql
+To test the Metrics you will need Prometheus and Grafana
 
-and also install:
+So something like this:
 
+    packer -S prometheus
+    sudo pacman -Ss grafana
     sudo systemctl start prometheus.service
     sudo systemctl start grafana.service
 
@@ -59,7 +78,7 @@ The then demo code on your PC:
 Build and start **Membership service**
 
     cd membership/
-    mvn clean install -Ppayara-micro-run
+    mvn clean install -Prun
 
 Build and start **Profiling service**
 
@@ -72,3 +91,7 @@ Build and start **User service**
     mvn clean install -Prun
 
 Opening up the ```index.html``` in ```static/public_html``` will give you the demo screen
+
+## Sample
+
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/sample.gif" alt="sample" width="100%"/>
