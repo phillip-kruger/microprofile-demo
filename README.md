@@ -6,13 +6,11 @@
 
 See the presentation [Google Slides](http://bit.ly/mp-presentation), and the [talk](https://www.youtube.com/watch?v=aSEPxDPc-ag)
 
-
-
 ## Implementations
 
 The demo runs on
 
-<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/thorntail.jpg" alt="thorntail" width="200px"/>
+<img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/thorntail.png" alt="thorntail" width="200px"/>
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/payara.jpeg" alt="payara" width="200px"/>
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/openliberty.png" alt="openliberty" width="200px"/>
 
@@ -90,7 +88,12 @@ Build and start **User service**
     cd user/
     mvn clean install -Prun
 
-Opening up the ```index.html``` in ```static/public_html``` will give you the demo screen
+### Static Web Demo page
+
+There is a static HTML Demo page, you can go to any of
+* http://localhost:7080/profiling
+* http://localhost:8080/membership
+* http://localhost:9080/user
 
 ## Sample
 

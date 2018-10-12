@@ -156,6 +156,13 @@
                 <artifactId>configurable-errorresponse-handler</artifactId>
                 <version>${configurable-errorresponse-handler.version}</version>
             </dependency>
+            <!-- Static Web -->
+            <dependency>
+                <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
+                <artifactId>staticweb</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     
@@ -217,6 +224,7 @@
     </build>
     
     <modules>
+        <module>staticweb</module>
         <module>membership</module>
         <module>profiling</module>
         <module>user</module>

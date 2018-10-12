@@ -98,6 +98,12 @@
             <scope>runtime</scope>
         </dependency>
         
+        <!-- Static web -->
+        <dependency>
+            <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
+            <artifactId>staticweb</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
     
     <build>
