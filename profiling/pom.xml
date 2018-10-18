@@ -25,7 +25,9 @@
         <thorntail.logsDir>${thorntail.installDir}${file.separator}logs</thorntail.logsDir>
         <thorntail.logfile>${thorntail.logsDir}${file.separator}server.log</thorntail.logfile>
         
-        <es.version>6.4.0</es.version>
+        <es.version>6.4.2</es.version>
+        <log4j.version>2.11.1</log4j.version>
+            
     </properties>
     
     <dependencyManagement>
@@ -48,6 +50,18 @@
             <artifactId>transport</artifactId>
             <version>${es.version}</version>
         </dependency>
+        <!-- Elasticsearch needs log4j -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
 
         <!-- Swagger UI -->
         <dependency>

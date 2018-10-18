@@ -16,8 +16,8 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
-import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -29,7 +29,7 @@ import org.elasticsearch.search.sort.SortOrder;
 public class EventSearcher {
     
     @Inject
-    private TransportClient client;
+    private Client client;
     
     @Timeout(value = 5 , unit = ChronoUnit.SECONDS)
     @CircuitBreaker(failOn = NoNodeAvailableException.class,requestVolumeThreshold = 4, failureRatio=0.75, delay = 5, delayUnit = ChronoUnit.SECONDS )

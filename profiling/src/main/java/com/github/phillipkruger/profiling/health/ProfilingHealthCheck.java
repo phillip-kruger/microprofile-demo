@@ -8,9 +8,9 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.client.ClusterAdminClient;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
-import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.cluster.health.ClusterHealthStatus;
 
 /**
@@ -23,7 +23,7 @@ import org.elasticsearch.cluster.health.ClusterHealthStatus;
 public class ProfilingHealthCheck implements HealthCheck {
     
     @Inject
-    private TransportClient client;
+    private Client client;
     
     @Override
     public HealthCheckResponse call() {

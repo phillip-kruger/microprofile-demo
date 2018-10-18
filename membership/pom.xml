@@ -120,7 +120,6 @@
         
     </dependencies>
     
-    
     <build>
         <plugins>
             <plugin>
@@ -153,10 +152,6 @@
                             <key>--rootdir</key>
                             <value>${payara-micro.installDir}</value>
                         </option>
-<!--                        <option>
-                            <key>-domainconfig</key>
-                            <value>${project.build.directory}/domain.xml</value>
-                        </option>-->
                         
                     </commandLineOptions>
                     

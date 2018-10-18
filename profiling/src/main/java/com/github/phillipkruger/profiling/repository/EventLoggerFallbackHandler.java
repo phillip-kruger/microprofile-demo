@@ -12,7 +12,7 @@ import lombok.extern.java.Log;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 
@@ -20,7 +20,7 @@ import org.elasticsearch.rest.RestStatus;
 @Dependent
 public class EventLoggerFallbackHandler implements FallbackHandler<Future<Void>>{
     @Inject
-    private TransportClient client;
+    private Client client;
     
     @Inject
     private UserEventConverter converter;

@@ -26,6 +26,8 @@ This demo use [microprofile-extentions](https://github.com/microprofile-extensio
 
 ### Prerequisite
 
+To make the example easier we use an internal Elasticsearch server, so no need to install any datastore.
+
 #### MySQL / Maria
 
 You need a MySQL/Maria Database installed and running on your PC.
@@ -39,18 +41,9 @@ You need to create a Database and Database User in Maria:
 
     mysql -u root -p < membership/init.sql
 
-#### Elasticsearch
-
-You need Elasticsearch server installed and running on your PC.
-
-So something like this:
-
-    sudo pacman -S elasticsearch
-    sudo systemctl start elasticsearch.service
-
 #### Prometheus and Grafana
 
-To test the Metrics you will need Prometheus and Grafana
+To see the metrics in action (i.e. more than just the raw output) you will need Prometheus and Grafana server.
 
 So something like this:
 
@@ -91,9 +84,14 @@ Build and start **User service**
 ### Static Web Demo page
 
 There is a static HTML Demo page, you can go to any of
+
 * http://localhost:7080/profiling
 * http://localhost:8080/membership
 * http://localhost:9080/user
+
+You can generate a token in the [User Service](http://localhost:9080/user) to be used in the other services.
+
+You can find some test users in the OpenLiberty configuration - [server.xml](https://github.com/phillip-kruger/microprofile-demo/blob/master/user/src/main/openliberty/config/server.xml)
 
 ## Sample
 

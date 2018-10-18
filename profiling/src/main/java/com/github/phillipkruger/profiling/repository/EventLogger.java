@@ -20,17 +20,17 @@ import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import com.github.phillipkruger.profiling.membership.MembershipProxy;
 import org.eclipse.microprofile.faulttolerance.Fallback;
+import org.elasticsearch.client.Client;
 
 @RequestScoped
 @Log
 public class EventLogger {
     @Inject
-    private TransportClient client;
+    private Client client;
     
     @Inject
     private UserEventConverter converter;
