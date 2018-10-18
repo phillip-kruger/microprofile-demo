@@ -1,9 +1,9 @@
 package com.github.phillipkruger.profiling.repository;
 
-public class ClientNotAvailableException extends RuntimeException {
+import lombok.NoArgsConstructor;
 
-    public ClientNotAvailableException() {
-    }
+@NoArgsConstructor
+public class ClientNotAvailableException extends RuntimeException {
 
     public ClientNotAvailableException(String string) {
         super(string);
