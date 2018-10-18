@@ -26,9 +26,11 @@ This demo use [microprofile-extentions](https://github.com/microprofile-extensio
 
 ### Prerequisite
 
-To make the example easier we use an internal Elasticsearch server, so no need to install any datastore.
+To make the example easier we use an internal H2 Database and internal Elasticsearch server, so no need to install any datastore.
 
-#### MySQL / Maria
+You can, however, use MySQL if you prefer:
+
+#### MySQL / Maria (Optional)
 
 You need a MySQL/Maria Database installed and running on your PC.
 
@@ -41,9 +43,11 @@ You need to create a Database and Database User in Maria:
 
     mysql -u root -p < membership/init.sql
 
-#### Prometheus and Grafana
+You also need to change the datasource definition in web.xml and change the driver in pom.xml
 
-To see the metrics in action (i.e. more than just the raw output) you will need Prometheus and Grafana server.
+#### Prometheus and Grafana (Optional)
+
+To see the metrics in action (i.e. more than just the raw output) you will need a Prometheus and Grafana server.
 
 So something like this:
 

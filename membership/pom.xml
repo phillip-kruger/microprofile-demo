@@ -26,7 +26,8 @@
         <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
-        <mysql.version>8.0.12</mysql.version>
+        <!--<mysql.version>8.0.12</mysql.version>-->
+        <h2.version>1.4.197</h2.version>
     </properties>
     
     <dependencyManagement>
@@ -49,11 +50,11 @@
         </dependency>
         
         <!-- Database -->
-        <dependency>
+<!--        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

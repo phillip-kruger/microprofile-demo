@@ -10,11 +10,21 @@
     </session-config>    
     
     <data-source>
+<!--        
+        To use Mysql, change the datasource values to:
+        
         <name>java:global/membership/MembershipDS</name>
         <class-name>com.mysql.cj.jdbc.MysqlXADataSource</class-name>
         <url>jdbc:mysql://localhost/membership?useLegacyDatetimeCode=false&amp;serverTimezone=America/New_York</url>
         <user>membershipuser</user>
         <password>membershipuser</password>
+        <transactional>true</transactional>-->
+        
+        <name>java:global/membership/MembershipDS</name>
+        <class-name>org.h2.jdbcx.JdbcDataSource</class-name>
+        <url>jdbc:h2:./data/membership</url>
+        <user>sa</user>
+        <password>""</password>
         <transactional>true</transactional>
     </data-source>
     
