@@ -1,4 +1,4 @@
-swarm:
+thorntail:
   bind:
     address: 0.0.0.0
   microprofile:
@@ -28,9 +28,7 @@ swarm:
     audit-access:
       audit-log-logger:
         enabled: false
-        log-boot: false
-        
-        
+        log-boot: false 
   hystrix:
     command:
       default:

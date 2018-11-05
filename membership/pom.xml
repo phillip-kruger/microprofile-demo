@@ -21,12 +21,10 @@
         <payara-micro.http.port>8080</payara-micro.http.port>
         <payara-micro.https.port>8443</payara-micro.https.port>
         <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>
-        <payara-micro.deployDir>${payara-micro.installDir}${file.separator}autodeploy</payara-micro.deployDir>
         <payara-micro.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}payara-micro${file.separator}config</payara-micro.configDir>
         <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
-        <!--<mysql.version>8.0.12</mysql.version>-->
         <h2.version>1.4.197</h2.version>
     </properties>
     
@@ -53,7 +51,7 @@
 <!--        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
+            <version>8.0.12</version>
         </dependency>-->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -135,7 +133,6 @@
                     </artifactItem>
                     <payaraVersion>${payara-micro.version}</payaraVersion>
                     <commandLineOptions>
-                        
                         <option>
                             <key>--port</key>
                             <value>${payara-micro.http.port}</value>
@@ -145,15 +142,9 @@
                             <value>${payara-micro.https.port}</value>
                         </option>
                         <option>
-                            <key>--deploymentdir</key>
-                            <value>${payara-micro.deployDir}</value>
-                        </option>
-                        
-                        <option>
                             <key>--rootdir</key>
                             <value>${payara-micro.installDir}</value>
                         </option>
-                        
                     </commandLineOptions>
                     
                     <deployArtifacts>

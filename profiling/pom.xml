@@ -16,7 +16,7 @@
 
     <properties>
         <!-- thorntail properties -->
-        <thorntail.version>2.2.0.Final</thorntail.version>
+        <thorntail.version>2.2.1.Final</thorntail.version>
         <thorntail.http.port>7080</thorntail.http.port>
         <thorntail.https.port>7443</thorntail.https.port>
         <thorntail.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}thorntail</thorntail.installDir>
@@ -132,11 +132,11 @@
                 
                 <configuration>
                     <properties>
-                        <swarm.context.path>/${project.artifactId}</swarm.context.path>
-                        <swarm.http.port>${thorntail.http.port}</swarm.http.port>
-                        <swarm.https.port>${thorntail.https.port}</swarm.https.port>
-                        <swarm.management.http.port>2${thorntail.http.port}</swarm.management.http.port> 
-                        <swarm.management.https.port>2${thorntail.https.port}</swarm.management.https.port>
+                        <thorntail.context.path>/${project.artifactId}</thorntail.context.path>
+                        <thorntail.http.port>${thorntail.http.port}</thorntail.http.port>
+                        <thorntail.https.port>${thorntail.https.port}</thorntail.https.port>
+                        <thorntail.management.http.port>2${thorntail.http.port}</thorntail.management.http.port> 
+                        <thorntail.management.https.port>2${thorntail.https.port}</thorntail.management.https.port>
                     </properties>
                 </configuration>
                 <executions>
