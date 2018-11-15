@@ -28,7 +28,7 @@
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
         
-        <nimbus-jose-jwt.version>6.0.2</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>6.2</nimbus-jose-jwt.version>
     </properties>
     
     <dependencies>
@@ -68,7 +68,7 @@
         </dependency>
         <!-- Static web -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>staticweb</artifactId>
             <scope>runtime</scope>
         </dependency>

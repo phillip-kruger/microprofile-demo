@@ -114,7 +114,7 @@
         
         <!-- Static web -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>staticweb</artifactId>
             <scope>runtime</scope>
         </dependency>

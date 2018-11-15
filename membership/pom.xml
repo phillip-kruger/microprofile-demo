@@ -105,17 +105,10 @@
         
         <!-- Static web -->
         <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-demo</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>staticweb</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
-        <!-- JWT ext -->
-        <dependency>
-            <groupId>com.github.phillip-kruger.microprofile-extensions</groupId>
-            <artifactId>jwt-user-ext</artifactId>
-        </dependency>
-        
         
     </dependencies>
     

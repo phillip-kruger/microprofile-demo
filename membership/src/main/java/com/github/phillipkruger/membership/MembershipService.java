@@ -1,6 +1,5 @@
 package com.github.phillipkruger.membership;
 
-import com.github.phillipkruger.microprofileextentions.jwt.UserAccess;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +63,7 @@ public class MembershipService {
     @Timed(name = "Memberships requests time",absolute = true,unit = MetricUnits.MICROSECONDS)
     @Operation(description = "Get all the current memberships")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfull, returning memberships"),
+            @APIResponse(responseCode = "200", description = "Successful, returning memberships"),
             @APIResponse(responseCode = "504", description = "Service timed out"),
             @APIResponse(responseCode = "401", description = "User not authorized")
     })
@@ -93,7 +92,7 @@ public class MembershipService {
     @Counted(name = "Membership requests",absolute = true,monotonic = true)
     @Operation(description = "Get a certain Membership by id")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfull, returning membership", 
+            @APIResponse(responseCode = "200", description = "Successful, returning membership", 
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = Membership.class))),
             @APIResponse(responseCode = "504", description = "Service timed out"),
@@ -101,7 +100,6 @@ public class MembershipService {
     })
     @SecurityRequirement(name = "Authorization")
     @RolesAllowed({"admin","user"})
-    @UserAccess(pathToUserName = "owner.email" , ignoreGroups = {"admin"})
     @Traced(operationName = "GetMembershipById", value = true)
     @CircuitBreaker(failOn = RuntimeException.class,requestVolumeThreshold = 1, failureRatio=1, 
             delay = 10, delayUnit = ChronoUnit.SECONDS ) 
