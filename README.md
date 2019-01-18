@@ -70,6 +70,8 @@ The then demo code on your PC:
     mvn clean install
 
 ### Running
+
+#### Manually
 Build and start **Membership service**
 
     cd membership/
@@ -84,6 +86,12 @@ Build and start **User service**
 
     cd user/
     mvn clean install -Prun
+    
+#### Docker compose
+Alternatively you can use docker and docker compose to run the whole project in a single command:
+
+    mvn clean install
+    docker-compose up --build
 
 ### Static Web Demo page
 
