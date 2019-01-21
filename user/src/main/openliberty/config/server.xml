@@ -24,11 +24,8 @@
         <user name="koos@gmail.com" password="{xor}NDAwLC8oOw==" />   <!-- koospwd -->
         <user name="minki@gmail.com" password="{xor}MjYxNDYvKDs=" />   <!-- minkipwd -->
 
-        <group name="Administrator">
-            <member name="admin" />
-        </group>
-        
         <group name="admin">    
+            <member name="admin" />
             <member name="phillip.kruger@gmail.com" />
         </group>
 
