@@ -16,7 +16,7 @@
 
     <properties>
         <!-- thorntail properties -->
-        <thorntail.version>2.2.1.Final</thorntail.version>
+        <thorntail.version>2.3.0.Final</thorntail.version>
         <thorntail.http.port>7080</thorntail.http.port>
         <thorntail.https.port>7443</thorntail.https.port>
         <thorntail.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}thorntail</thorntail.installDir>
@@ -25,7 +25,7 @@
         <thorntail.logsDir>${thorntail.installDir}${file.separator}logs</thorntail.logsDir>
         <thorntail.logfile>${thorntail.logsDir}${file.separator}server.log</thorntail.logfile>
         
-        <es.version>6.4.2</es.version>
+        <es.version>6.4.3</es.version>
         <log4j.version>2.11.1</log4j.version>
             
     </properties>

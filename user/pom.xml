@@ -18,7 +18,7 @@
         <!-- Open Liberty properties -->
         <log.name>com.github.phillipkruger.user</log.name>
         <log.level>FINEST</log.level>
-        <openliberty.version>18.0.0.3</openliberty.version>
+        <openliberty.version>18.0.0.4</openliberty.version>
         <openliberty.http.port>9080</openliberty.http.port>
         <openliberty.https.port>9443</openliberty.https.port>
         <openliberty.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}openliberty</openliberty.installDir>
@@ -28,7 +28,7 @@
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
         
-        <nimbus-jose-jwt.version>6.2</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>6.7</nimbus-jose-jwt.version>
     </properties>
     
     <dependencies>

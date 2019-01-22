@@ -14,9 +14,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlAccessType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +25,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity(name = Membership.NAME) @Table(name = Membership.NAME)
-@XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
     @NamedQuery(name = Membership.QUERY_FIND_ALL, query = "SELECT m FROM MEMBERSHIP m")
 })

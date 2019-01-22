@@ -14,9 +14,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +26,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity(name = Person.NAME) @Table(name = Person.NAME)
-@XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
 @Schema(name="Person", description="POJO that represents a person.")
 public class Person implements Serializable {
     private static final long serialVersionUID = -8531040143398373846L;

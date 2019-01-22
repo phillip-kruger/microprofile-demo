@@ -17,7 +17,7 @@
     <properties>
         <!-- payara-micro properties -->
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
-        <payara-micro.version>5.183</payara-micro.version>
+        <payara-micro.version>5.184</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>
         <payara-micro.https.port>8443</payara-micro.https.port>
         <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <version>${h2.version}</version>
         </dependency>
         
         
