@@ -24,8 +24,8 @@ import javax.ws.rs.core.SecurityContext;
 /**
  * Token Service. JAX-RS
  * @author Phillip Kruger (phillip.kruger@phillip-kruger.com)
- * @see https://docs.payara.fish/documentation/microprofile/jwt.html
- * @see https://github.com/javaee-samples/microprofile1.2-samples/tree/master/jwt-auth
+ * see https://docs.payara.fish/documentation/microprofile/jwt.html
+ * see https://github.com/javaee-samples/microprofile1.2-samples/tree/master/jwt-auth
  */
 @Log
 @RequestScoped
