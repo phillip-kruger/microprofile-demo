@@ -16,8 +16,8 @@ You can make it your own or use it as is. You are also welcome to improve the ta
 
 ### Known presentations
 
-* [Java Cloud Conference](http://j-sa.co/) [Google Slides](http://bit.ly/mp-presentation), [Video](http://bit.ly/mp-youtube-video) - by [Phillip Kruger](https://twitter.com/phillipkruger) (July 2018)
-* [DevConfCZ](https://devconf.info/cz) [Google Slides](http://bit.ly/microprofile-talk) - by [Martin Stefanko](https://twitter.com/xstefank) (January 2019)
+* [Java Cloud Conference](http://j-sa.co/):  [[Google Slides](http://bit.ly/mp-presentation)], [[Video](http://bit.ly/mp-youtube-video)] - by [Phillip Kruger](https://twitter.com/phillipkruger) (July 2018)
+* [DevConfCZ](https://devconf.info/cz): [[Google Slides](http://bit.ly/microprofile-talk)] - by [Martin Stefanko](https://twitter.com/xstefank) (January 2019)
 * ... add you name here and do a PR :)
 
 
