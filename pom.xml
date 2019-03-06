@@ -47,6 +47,11 @@
             <email>phillip.kruger@phillip-kruger.com</email>
             <organizationUrl>http://www.phillip-kruger.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Martin Stefanko</name>
+            <email>xstefank122@gmail.com</email>
+        </developer>
+        
     </developers>
     
     <properties>
@@ -58,10 +63,10 @@
         <!-- JEE Platform -->        
         <javaee.version>8.0</javaee.version>
         <microProfile.version>2.1</microProfile.version>
-        <lombok.version>1.18.4</lombok.version>
+        <lombok.version>1.18.6</lombok.version>
         
         <!-- Microprofile extensions -->
-        <configsource-memory.version>1.0.5</configsource-memory.version>
+        <configsource-memory.version>1.0.7</configsource-memory.version>
         <swagger-ui.version>1.0.1</swagger-ui.version>
         <healthprobe-system.version>1.0.5</healthprobe-system.version>
         <healthprobe-jvm.version>1.0.5</healthprobe-jvm.version>
@@ -181,9 +186,7 @@
         <finalName>${project.artifactId}</finalName>
         
         <pluginManagement>
-            
             <plugins>
-                   
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
