@@ -17,7 +17,7 @@
     <properties>
         <!-- payara-micro properties -->
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
-        <payara-micro.version>5.184</payara-micro.version>
+        <payara-micro.version>5.191</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>
         <payara-micro.https.port>8443</payara-micro.https.port>
         <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>

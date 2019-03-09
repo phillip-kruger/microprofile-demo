@@ -29,7 +29,6 @@
             <id>wiki</id>
             <url>https://github.com/phillip-kruger/microprofile-demo/wiki</url>
         </site>
-        
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -38,7 +37,6 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-    
     </distributionManagement>
 
     <developers>
