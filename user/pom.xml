@@ -18,17 +18,17 @@
         <!-- Open Liberty properties -->
         <log.name>com.github.phillipkruger.user</log.name>
         <log.level>FINEST</log.level>
-        <openliberty.version>18.0.0.4</openliberty.version>
+        <openliberty.version>19.0.0.3</openliberty.version>
         <openliberty.http.port>9080</openliberty.http.port>
         <openliberty.https.port>9443</openliberty.https.port>
         <openliberty.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}openliberty</openliberty.installDir>
         <openliberty.configDir>${basedir}${file.separator}src${file.separator}main${file.separator}openliberty${file.separator}config</openliberty.configDir>
         <openliberty.logsDir>${openliberty.installDir}${file.separator}wlp${file.separator}usr${file.separator}servers${file.separator}defaultServer${file.separator}logs</openliberty.logsDir>
-        <openliberty.maven.version>2.6</openliberty.maven.version>
+        <openliberty.maven.version>2.6.4</openliberty.maven.version>
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
         
-        <nimbus-jose-jwt.version>6.7</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>7.0.1</nimbus-jose-jwt.version>
     </properties>
     
     <dependencies>
@@ -72,6 +72,7 @@
             <artifactId>staticweb</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
     </dependencies>
     
     <build>
