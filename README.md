@@ -39,28 +39,44 @@ This demo use [microprofile-extentions](https://github.com/microprofile-extensio
 
 ## Getting started.
 
-### Prerequisite
+### Source code
+Get the demo code on your PC:
 
-To make the example easier we use an internal H2 Database and internal Elasticsearch server, so no need to install any datastore.
+    git clone https://github.com/phillip-kruger/microprofile-demo.git
+    cd microprofile-demo
+    mvn clean install
 
-You can, however, use MySQL if you prefer:
+### Running
 
-#### MySQL / Maria (Optional)
+#### Docker compose
+You can use docker and docker compose to run the whole project in a single command:
 
-You need a MySQL/Maria Database installed and running on your PC.
+    mvn clean install
+    docker-compose up --build
 
-So something like this:
+This will start each service in it's own container, and also start Prometheus, Grafana and Nginx in a container.
+You can go to http://localhost to get the menu.
+
+#### Manually
+Alternatively you can start the services manually:
+
+##### Microservices
+Build and start **Membership service**
+
+    cd membership/
+    mvn clean install -Prun
+
+Build and start **Profiling service**
+
+    cd profiling/
+    mvn clean install -Prun
+
+Build and start **User service**
+
+    cd user/
+    mvn clean install -Prun
     
-    sudo pacman -S mariadb
-    sudo systemctl start mariadb.service
-
-You need to create a Database and Database User in Maria:
-
-    mysql -u root -p < membership/init.sql
-
-You also need to change the datasource definition in web.xml and change the driver in pom.xml
-
-#### Prometheus and Grafana (Optional)
+##### Prometheus and Grafana (Optional)
 
 To see the metrics in action (i.e. more than just the raw output) you will need a Prometheus and Grafana server.
 
@@ -77,38 +93,7 @@ Also make sure **prometheus** is configured in
 
 (look at [prometheus.yml](prometheus.yml) as an example. You can also use the [grafana.json](grafana.json) for the grafana dashboards)
 
-### Source code
-The then demo code on your PC:
-
-    git clone https://github.com/phillip-kruger/microprofile-demo.git
-    cd microprofile-demo
-    mvn clean install
-
-### Running
-
-#### Manually
-Build and start **Membership service**
-
-    cd membership/
-    mvn clean install -Prun
-
-Build and start **Profiling service**
-
-    cd profiling/
-    mvn clean install -Prun
-
-Build and start **User service**
-
-    cd user/
-    mvn clean install -Prun
-    
-#### Docker compose
-Alternatively you can use docker and docker compose to run the whole project in a single command:
-
-    mvn clean install
-    docker-compose up --build
-
-### Static Web Demo page
+##### Static Web Demo page
 
 There is a static HTML Demo page, you can go to any of
 
@@ -120,6 +105,45 @@ You can generate a token in the [User Service](http://localhost:9080/user) to be
 
 You can find some test users in the OpenLiberty configuration - [server.xml](https://github.com/phillip-kruger/microprofile-demo/blob/master/user/src/main/openliberty/config/server.xml)
 
+
+### Testing some requests
+#### Example POST to create an event
+
+    {
+        "userId": 1,
+        "eventName": "Squash",
+        "location": "Centurion",
+        "partnerName": "Fitbit",
+        "timeOccured": "2018-07-06T09:15:58+02",
+        "timeReceived": "2018-07-06T09:15:58+02",
+        "durationInMinutes": 34,
+        "metaData": {
+          "calories": "312"
+        }
+    }
+
 ## Sample
 
 <img src="https://raw.githubusercontent.com/phillip-kruger/microprofile-demo/master/sample.gif" alt="sample" width="100%"/>
+
+
+## Advance
+
+To make the example easier we use an internal H2 Database and internal Elasticsearch server, so no need to install any datastore.
+
+You can, however, use MySQL if you prefer:
+
+### MySQL / Maria (Optional)
+
+You need a MySQL/Maria Database installed and running on your PC.
+
+So something like this:
+    
+    sudo pacman -S mariadb
+    sudo systemctl start mariadb.service
+
+You need to create a Database and Database User in Maria:
+
+    mysql -u root -p < membership/init.sql
+
+You also need to change the datasource definition in web.xml and change the driver in pom.xml

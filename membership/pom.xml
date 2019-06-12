@@ -17,7 +17,7 @@
     <properties>
         <!-- payara-micro properties -->
         <payara-micro.maven.version>1.0.0</payara-micro.maven.version>
-        <payara-micro.version>5.191</payara-micro.version>
+        <payara-micro.version>5.192</payara-micro.version>
         <payara-micro.http.port>8080</payara-micro.http.port>
         <payara-micro.https.port>8443</payara-micro.https.port>
         <payara-micro.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}payara-micro</payara-micro.installDir>
@@ -25,7 +25,7 @@
         <payara-micro.logsDir>${payara-micro.installDir}${file.separator}logs</payara-micro.logsDir>
         <payara-micro.logfile>${payara-micro.logsDir}${file.separator}server.log</payara-micro.logfile>
         
-        <h2.version>1.4.197</h2.version>
+        <h2.version>1.4.199</h2.version>
     </properties>
     
     <dependencyManagement>
@@ -187,56 +187,5 @@
             </build>
         </profile>
         
-        <!-- Deploy to Yellow Raspberry Pi -->
-        <profile>
-            <id>yellow-pi</id>
-            <activation>
-                <property>
-                    <name>yellow-pi</name>
-                </property>
-            </activation>
-            
-            <build>
-            
-                <plugins>
-                   
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        
-                        <executions>
-                            <execution>
-                                <id>redeploy</id>
-                                <phase>install</phase>
-                                <configuration>
-                                    <target>
-                                        
-                                        <!-- Copy the new version -->
-                                        <scp file="${project.build.directory}/${project.build.finalName}.war" 
-                                             todir="pi:${pi.password}@yellow:/home/pi/microprofile-demo/"
-                                             trust="true"
-                                        />
-                                        
-                                        <!-- Start the server -->
-                                        <sshexec 
-                                            trust="true"
-                                            verbose="false"
-                                            host="yellow"
-                                            username="pi"
-                                            password="${pi.password}"
-                                            command="sudo systemctl restart membership.service"/>
-                                        
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 </project>

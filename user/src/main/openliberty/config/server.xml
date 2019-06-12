@@ -4,7 +4,7 @@
     <!-- Enable features -->
     <featureManager>
         <feature>javaee-8.0</feature>
-        <feature>microProfile-2.1</feature>
+        <feature>microProfile-2.2</feature>
     </featureManager>
     
     <httpEndpoint id="defaultHttpEndpoint"

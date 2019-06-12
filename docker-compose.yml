@@ -4,16 +4,43 @@ version: "3.7"
 services:
   profiling-service:
     build: ./profiling
+    networks:
+      - default
     ports:
       - "7080:7080"
 
   membership-service:
     build: ./membership
+    networks:
+      - default
     ports:
       - "8080:8080"
 
   user-service:
     build: ./user
+    networks:
+      - default
     ports:
       - "9080:9080"
-
+      - "9443:9443"
+      
+  prometheus-service:
+    build: ./prometheus
+    networks:
+      - default
+    ports:
+      - "9090:9090"
+      
+  grafana-service:
+    build: ./grafana
+    networks:
+      - default
+    ports:
+      - "3000:3000"
+      
+  staticweb-service:    
+    build: ./staticweb
+    networks:
+      - default
+    ports:
+      - "80:80"

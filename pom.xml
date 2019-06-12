@@ -61,10 +61,10 @@
         <!-- JEE Platform -->        
         <javaee.version>8.0</javaee.version>
         <microProfile.version>2.2</microProfile.version>
-        <lombok.version>1.18.6</lombok.version>
+        <lombok.version>1.18.8</lombok.version>
         
         <!-- Microprofile extensions -->
-        <configsource-memory.version>1.0.7</configsource-memory.version>
+        <config-ext.version>1.0.9</config-ext.version>
         <swagger-ui.version>1.0.1</swagger-ui.version>
         <healthprobe-system.version>1.0.5</healthprobe-system.version>
         <healthprobe-jvm.version>1.0.5</healthprobe-jvm.version>
@@ -110,7 +110,12 @@
             <dependency>
                 <groupId>org.microprofile-ext.config-ext</groupId>
                 <artifactId>configsource-memory</artifactId>
-                <version>${configsource-memory.version}</version>
+                <version>${config-ext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.microprofile-ext.config-ext</groupId>
+                <artifactId>configsource-properties</artifactId>
+                <version>${config-ext.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.microprofile-ext.openapi-ext</groupId>

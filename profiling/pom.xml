@@ -88,10 +88,10 @@
             <artifactId>configurable-errorresponse-handler</artifactId>
         </dependency>
         
-        <!-- Config Memory source -->
+        <!-- Config file source (to change membership url when running in docker) -->
         <dependency>
             <groupId>org.microprofile-ext.config-ext</groupId>
-            <artifactId>configsource-memory</artifactId>
+            <artifactId>configsource-properties</artifactId>
             <scope>runtime</scope>
         </dependency>
         
@@ -192,54 +192,5 @@
             
         </profile>
         
-        <!-- Deploy to Red Raspberry Pi -->
-        <profile>
-            <id>red-pi</id>
-            <activation>
-                <property>
-                    <name>red-pi</name>
-                </property>
-            </activation>
-            
-            <build>
-            
-                <plugins>
-                   
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        
-                        <executions>
-                            <execution>
-                                <id>redeploy</id>
-                                <phase>install</phase>
-                                <configuration>
-                                    <target>
-                                        <!-- Copy the new version -->
-                                        <scp file="${project.build.directory}${file.separator}${project.artifactId}-thorntail.jar" 
-                                             todir="pi:${pi.password}@red:/home/pi/microprofile-demo/"
-                                             trust="true"
-                                        />
-                                        
-                                        <!-- Start the server -->
-                                        <sshexec 
-                                            trust="true"
-                                            verbose="false"
-                                            host="red"
-                                            username="pi"
-                                            password="${pi.password}"
-                                            command="sudo systemctl restart profiling.service"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 </project>
