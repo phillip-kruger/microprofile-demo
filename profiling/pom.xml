@@ -16,7 +16,7 @@
 
     <properties>
         <!-- thorntail properties -->
-        <thorntail.version>2.4.0.Final</thorntail.version>
+        <thorntail.version>2.5.0.Final</thorntail.version>
         <thorntail.http.port>7080</thorntail.http.port>
         <thorntail.https.port>7443</thorntail.https.port>
         <thorntail.installDir>${java.io.tmpdir}${file.separator}${project.artifactId}${file.separator}thorntail</thorntail.installDir>
