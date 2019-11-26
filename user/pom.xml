@@ -27,7 +27,7 @@
         <openliberty.Xms>64m</openliberty.Xms>
         <openliberty.Xmx>128m</openliberty.Xmx>
         
-        <nimbus-jose-jwt.version>7.2.1</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
     </properties>
     
     <dependencies>
