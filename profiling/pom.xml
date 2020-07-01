@@ -26,7 +26,7 @@
         <thorntail.logfile>${thorntail.logsDir}${file.separator}server.log</thorntail.logfile>
         
         <es.version>6.4.3</es.version>
-        <log4j.version>2.11.2</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
             
     </properties>
     
